@@ -8,3 +8,6 @@ source("tools/co_network.R")
 source("tools/cross_feeding_network.R")
 
 library(tidyverse)
+
+data <- clean_data(type = "long")
+make_barplot(data)
