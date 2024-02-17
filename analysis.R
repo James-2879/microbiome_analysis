@@ -11,3 +11,5 @@ library(tidyverse)
 
 data <- clean_data(type = "long")
 make_barplot(data)
+make_stacked_barplot(data)
+make_heatmap(data)
