@@ -24,8 +24,10 @@ test_microbiome <- read_tsv("data/input/test_microbiome.tsv") %>%
   mutate("species" = str_split_i(taxonomy, ";", -1)) %>% 
   mutate(species = tolower(species)) %>% 
   mutate(scientific_name = paste(genus, species))
+
 reference_abundances <- read_tsv("data/input/control_reference_table.txt")
 
+# Make these variable names better
 sample_1 <- read_tsv("data/input/sample_1.tsv") %>%
   mutate("repeat" = "1")
 sample_2 <- read_tsv("data/input/sample_2.tsv") %>%
@@ -33,7 +35,9 @@ sample_2 <- read_tsv("data/input/sample_2.tsv") %>%
 sample_3 <- read_tsv("data/input/sample_3.tsv") %>%
   mutate("repeat" = "3")
 
-# currently this data is not good enough to group by genus or species
+remove(sample_1, sample_2, sample_3)
+
+# Make this variable name better
 all_samples <- bind_rows(sample_1, sample_2, sample_3) %>%
   mutate("domain" = str_split_i(Taxa, ";", -8)) %>%
   mutate("kingdom" = str_split_i(Taxa, ";", -7)) %>%
@@ -45,28 +49,22 @@ all_samples <- bind_rows(sample_1, sample_2, sample_3) %>%
   mutate("species" = str_split_i(Taxa, ";", -1)) %>%
   mutate(species = tolower(species)) %>%
   mutate(scientific_name = paste(genus, species)) %>%
-  mutate("day" = "default") %>%
-  mutate("location" = "default") %>%
-  mutate("type" = "default")
+  mutate("day" = "default") %>% # TODO remove once data complete
+  mutate("location" = "default") %>% # TODO remove once data complete
+  mutate("type" = "default") # TODO remove once data complete
 
 # https://journals.asm.org/doi/10.1128/msystems.00166-16
 
-pcoa_plot <- do_pcoa(data = all_samples, classification = "order")
-pcoa_plot
-
-
 # Example functions ------------------------------------------------------------
 
-make_barplot(test_data)
-make_stacked_barplot(test_data)
-make_horizontal_stacked_barplot(test_data)
-make_compressed_stacked_barplot(test_data)
-
-make_heatmap(test_data)
-make_univar_heatmap(test_data)
-make_multivar_heatmap(test_data)
-
-# do_pcoa(test_data)
+# Will not work until day, location, type exist in data etc,
+make_barplot(test_microbiome)
+make_stacked_barplot(test_microbiome)
+make_horizontal_stacked_barplot(test_microbiome)
+make_compressed_stacked_barplot(test_microbiome)
+make_heatmap(test_microbiome)
+make_univar_heatmap(test_microbiome)
+make_multivar_heatmap(test_microbiome)
 
 # Notes ------------------------------------------------------------------------
 
@@ -74,8 +72,8 @@ make_multivar_heatmap(test_data)
 # TODO Plot to analyze normalization
 # TODO Phylogram of the bacteria species for ordering the bar plot
 # TODO Plot to show change in abundance
-#       I think LFC using DESeq2 might be a good idea
-#       Volcano plot
+#     I think LFC using DESeq2 might be a good idea
+#     Volcano plot
 # TODO look at the co-occurence network stuff 
 
 # Probably phyloseq for network analysis
@@ -86,6 +84,8 @@ plot_controls()
 
 # PCoA -------------------------------------------------------------------------
 
+do_pcoa(data = all_samples, 
+        classification = "phylum")
 
 
 # Tree map ---------------------------------------------------------------------
