@@ -64,42 +64,34 @@ do_pcoa <- function(data, classification) {
 
 # Main ----
 
-sample_1 <- read_tsv("data/input/sample_1.tsv") %>% 
-  mutate("repeat" = "1")
-sample_2 <- read_tsv("data/input/sample_2.tsv") %>% 
-  mutate("repeat" = "2")
-sample_3 <- read_tsv("data/input/sample_3.tsv") %>% 
-  mutate("repeat" = "3")
+# sample_1 <- read_tsv("data/input/sample_1.tsv") %>% 
+#   mutate("repeat" = "1")
+# sample_2 <- read_tsv("data/input/sample_2.tsv") %>% 
+#   mutate("repeat" = "2")
+# sample_3 <- read_tsv("data/input/sample_3.tsv") %>% 
+#   mutate("repeat" = "3")
+# 
+# # currently this data is not good enough to group by genus or species
+# all_samples <- bind_rows(sample_1, sample_2, sample_3) %>% 
+#   mutate("domain" = str_split_i(Taxa, ";", -8)) %>% 
+#   mutate("kingdom" = str_split_i(Taxa, ";", -7)) %>% 
+#   mutate("phylum" = str_split_i(Taxa, ";", -6)) %>% 
+#   mutate("class" = str_split_i(Taxa, ";", -5)) %>% 
+#   mutate("order" = str_split_i(Taxa, ";", -4)) %>% 
+#   mutate("family" = str_split_i(Taxa, ";", -3)) %>% 
+#   mutate("genus" = str_split_i(Taxa, ";", -2)) %>% 
+#   mutate("species" = str_split_i(Taxa, ";", -1)) %>% 
+#   mutate(species = tolower(species)) %>% 
+#   mutate(scientific_name = paste(genus, species)) %>% 
+#   mutate("day" = "default") %>%
+#   mutate("location" = "default") %>%
+#   mutate("type" = "default")
+# 
+# # https://journals.asm.org/doi/10.1128/msystems.00166-16
+# 
+# pcoa_plot <- do_pcoa(data = all_samples, classification = "order")
+# pcoa_plot
 
-# currently this data is not good enough to group by genus or species
-all_samples <- bind_rows(sample_1, sample_2, sample_3) %>% 
-  mutate("domain" = str_split_i(Taxa, ";", -8)) %>% 
-  mutate("kingdom" = str_split_i(Taxa, ";", -7)) %>% 
-  mutate("phylum" = str_split_i(Taxa, ";", -6)) %>% 
-  mutate("class" = str_split_i(Taxa, ";", -5)) %>% 
-  mutate("order" = str_split_i(Taxa, ";", -4)) %>% 
-  mutate("family" = str_split_i(Taxa, ";", -3)) %>% 
-  mutate("genus" = str_split_i(Taxa, ";", -2)) %>% 
-  mutate("species" = str_split_i(Taxa, ";", -1)) %>% 
-  mutate(species = tolower(species)) %>% 
-  mutate(scientific_name = paste(genus, species)) %>% 
-  mutate("day" = "default") %>%
-  mutate("location" = "default") %>%
-  mutate("type" = "default")
-
-# https://journals.asm.org/doi/10.1128/msystems.00166-16
-
-pcoa_order <- do_pcoa(data = all_samples, classification = "order")
-pcoa_order
-
-pcoa_family <- do_pcoa(data = all_samples, classification = "family")
-pcoa_family
-
-pcoa_genus <- do_pcoa(data = all_samples, classification = "genus")
-pcoa_genus
-
-pcoa_species <- do_pcoa(data = all_samples, classification = "species")
-pcoa_species
 
   # Inlcude this in error checking somewhere
 # pcoa_data <- all_samples %>%
