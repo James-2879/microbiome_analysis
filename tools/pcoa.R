@@ -7,37 +7,29 @@ do_pcoa <- function(data, classification) {
   ### I mean they probably are already if they're percentages
   
   # Filter data to be used in analysis
-  # Change shape fo0r PCoA analysis
-  data0 <<- data %>% 
+  # Change shape for PCoA analysis
+  # TODO the pivot_wider then pivot_longer is probably unnecessary
+  pcoa_data <<- data %>% 
     rename("organism" = classification) %>% 
     select(c(organism, abundance, day, location, type, `repeat`)) %>% 
     group_by(organism, day, location, type, `repeat`) %>%
     summarise("abundance" = sum(abundance)) %>%
     pivot_wider(names_from = organism, values_from = abundance) %>% 
-    select_if(~all(complete.cases(.)))
+    select_if(~all(complete.cases(.))) %>% 
+    pivot_longer(cols = 5:length(data0), values_to = "abundance", names_to = "organism")
   
   # Add a sample ID column for later 
   # (annotations and data need to be split for analysis)
-  # sample_ids <- seq(1, dim(data0)[1])
-  # sample_ids <- paste0("sample_", sample_ids)
-  # data0 <<- data0 %>% 
-    # add_column(sample_ids, .before = 1) #%>% 
-    # column_to_rownames(var = "sample_ids")
-  
-  data2 <- data0 %>% 
-    pivot_longer(cols = 5:length(data0), values_to = "abundance", names_to = "organism")
-  
-  sample_ids <- seq(1, dim(data2)[1])
+  sample_ids <- seq(1, dim(pcoa_data)[1])
   sample_ids <- paste0("sample_", sample_ids)
-  
-  data2 <- data2 %>% 
+  pcoa_data <- pcoa_data %>% 
     add_column(sample_ids) %>%
     column_to_rownames("sample_ids")
   
   # Split off the data frames
-  abundance_df <<- data2 %>% 
+  abundance_df <<- pcoa_data %>% 
     select(-c(location, day, type, `repeat`, organism))
-  annotations_df <<- data2 %>% 
+  annotations_df <<- pcoa_data %>% 
     select(c(organism, location, day, type, `repeat`)) %>% 
     rownames_to_column(var = "sample_ids")
   
@@ -54,10 +46,6 @@ do_pcoa <- function(data, classification) {
     select(-sample_ids) %>% 
     rename("PCoA1" = V1,
            "PCoA2" = V2)
-  
-  
-  #  currently the issue with this is that the rows and columns are the wrong way round so it shoul dbe
-  #  roganisms as the rows and as the columns it should be samples
   
   # Plot the scaled distances
   pcoa_plot <- ggplot(pcoa_df,
@@ -112,8 +100,6 @@ pcoa_genus
 
 pcoa_species <- do_pcoa(data = all_samples, classification = "species")
 pcoa_species
-
-
 
   # Inlcude this in error checking somewhere
 # pcoa_data <- all_samples %>%
