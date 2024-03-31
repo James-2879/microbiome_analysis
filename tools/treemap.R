@@ -1,17 +1,17 @@
 library(treemapify)
 library(viridis)
 
-make_treemap <- function(data, classification) {
+make_treemap <- function(data, classification, max) {
   
   grouped_abundance <<- data %>% 
     select(classification, abundance) %>% 
     rename("organism" = classification) %>% 
     group_by(organism) %>% 
     summarise("abundance" = sum(abundance)) %>% 
-    slice_head(n = 10)
+    filter(!is.na(organism) & !is.na(abundance)) %>% 
+    slice_head(n = max)
   
   treemap <<- grouped_abundance %>% 
-    filter(organism != "Prevotella") %>% 
     ggplot(mapping = aes(area = abundance,
                          fill = organism,
                          label = organism)) +
@@ -22,28 +22,35 @@ make_treemap <- function(data, classification) {
   
   return(treemap)
   
-  # genus_species_abundance <- data %>% 
-  #   select(genus, species, abundance) %>% 
-  #   group_by(genus, species) %>% 
-  #   summarise("abundance" = sum(abundance)) %>% 
-  #   arrange(desc(abundance)) %>% 
-  #   ungroup() # %>% 
-  # # slice_head(n = 10)
-  # 
-  # genus_species_treemap <- genus_species_abundance %>% 
-  #   filter(species != "prevotella corporis") %>%
-  #   ggplot(mapping = aes(area = abundance,
-  #                        fill = genus,
-  #                        label = species,
-  #                        subgroup = genus,
-  #                        border.col = "white",
-  #                        border.lw = 1)) +
-  #   geom_treemap() +
-  #   geom_treemap_subgroup_border(color = "white", size = 3) +
-  #   # geom_treemap_subgroup_text(place = "centre", grow = T, alpha = 1, colour =
-  #   #                              "white", fontface = "italic", min.size = 0) +
-  #   geom_treemap_text(colour = "white", place = "centre", reflow = T, alpha = 1,
-  #                     fontface = "italic") +
-  #   scale_fill_viridis(discrete = TRUE, option = "D")
-  # genus_species_treemap
+}
+
+make_dual_treemap <- function(data, classification1, classification2, max) {
+  
+  grouped_abundance <<- data %>%
+    select(classification1, classification2, abundance) %>%
+    rename("parent" = classification1,
+           "child" = classification2) %>% 
+    group_by(parent, child) %>%
+    summarise("abundance" = sum(abundance)) %>%
+    arrange(desc(abundance)) %>%
+    ungroup() %>%
+    filter(!is.na(parent) & !is.na(child) & !is.na(abundance)) %>% 
+    slice_head(n = max)
+  
+  treemap <- grouped_abundance %>%
+    ggplot(mapping = aes(area = abundance,
+                         fill = parent,
+                         label = child,
+                         subgroup = parent,
+                         border.col = "white",
+                         border.lw = 1)) +
+    geom_treemap() +
+    geom_treemap_subgroup_border(color = "white", size = 3) +
+    # geom_treemap_subgroup_text(place = "centre", grow = T, alpha = 1, colour =
+    #                              "white", fontface = "italic", min.size = 0) +
+    geom_treemap_text(colour = "white", place = "centre", reflow = T, alpha = 1,
+                      fontface = "italic") +
+    scale_fill_viridis(discrete = TRUE, option = "D")
+  
+  return(treemap)
 }
