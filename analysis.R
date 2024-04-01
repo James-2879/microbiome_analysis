@@ -1,6 +1,7 @@
 script_dir <- "/home/james/Documents/microbiome_analysis/"
 setwd(script_dir)
 
+source("tools/themes.R")
 source("tools/controls.R")
 source("tools/treemap.R")
 source("tools/barplot.R")
