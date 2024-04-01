@@ -35,8 +35,6 @@ sample_2 <- read_tsv("data/input/sample_2.tsv") %>%
 sample_3 <- read_tsv("data/input/sample_3.tsv") %>%
   mutate("repeat" = "3")
 
-remove(sample_1, sample_2, sample_3)
-
 # Make this variable name better
 all_samples <- bind_rows(sample_1, sample_2, sample_3) %>%
   mutate("domain" = str_split_i(Taxa, ";", -8)) %>%
@@ -53,18 +51,20 @@ all_samples <- bind_rows(sample_1, sample_2, sample_3) %>%
   mutate("location" = "default") %>% # TODO remove once data complete
   mutate("type" = "default") # TODO remove once data complete
 
+remove(sample_1, sample_2, sample_3)
+
 # https://journals.asm.org/doi/10.1128/msystems.00166-16
 
 # Example functions ------------------------------------------------------------
 
 # Will not work until day, location, type exist in data etc,
-make_barplot(test_microbiome)
-make_stacked_barplot(test_microbiome)
-make_horizontal_stacked_barplot(test_microbiome)
-make_compressed_stacked_barplot(test_microbiome)
-make_heatmap(test_microbiome)
-make_univar_heatmap(test_microbiome)
-make_multivar_heatmap(test_microbiome)
+# make_barplot(test_microbiome)
+# make_stacked_barplot(test_microbiome)
+# make_horizontal_stacked_barplot(test_microbiome)
+# make_compressed_stacked_barplot(test_microbiome)
+# make_heatmap(test_microbiome)
+# make_univar_heatmap(test_microbiome)
+# make_multivar_heatmap(test_microbiome)
 
 # Notes ------------------------------------------------------------------------
 
@@ -74,9 +74,7 @@ make_multivar_heatmap(test_microbiome)
 # TODO Plot to show change in abundance
 #     I think LFC using DESeq2 might be a good idea
 #     Volcano plot
-# TODO look at the co-occurence network stuff 
 
-# Probably phyloseq for network analysis
 
 # Controls --------------------------------------------------------------------
 
@@ -98,6 +96,12 @@ make_dual_treemap(data = test_microbiome,
              classification1 = "order",
              classification2 = "family",
              max = 10)
+
+# Network ----------------------------------------------------------------------
+
+create_network(data = all_samples,
+               taxonomic_level = "genus",
+               max_dist = 1)
 
 
 
