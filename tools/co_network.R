@@ -39,7 +39,7 @@ create_network <- function(data, taxonomic_level, max_dist) {
   SAMP = sample_data(sample_df)
   OTU = otu_table(otu_mat, taxa_are_rows = TRUE)
   TAX = tax_table(tax_mat)
-  physeq_object <- phyloseq(OTU, TAX, SAMP)
+  physeq_object <<- phyloseq(OTU, TAX, SAMP)
   
   # Clean up
   remove(sample_ids)
