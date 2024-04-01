@@ -11,8 +11,11 @@ source("tools/cross_feeding_network.R")
 
 library(tidyverse)
 
-source("tools/data.R")
-load_data()
+# Don't execute if running from command line
+if (interactive()) {
+  source("tools/data.R")
+  load_data()
+}
 
 # Example functions ------------------------------------------------------------
 
@@ -34,34 +37,35 @@ load_data()
 #     I think LFC using DESeq2 might be a good idea
 #     Volcano plot
 
+if (interactive()) {
+  
+  # Controls --------------------------------------------------------------------
+  
+  plot_controls()
+  
+  # PCoA -------------------------------------------------------------------------
+  
+  do_pcoa(data = all_samples, 
+          classification = "phylum")
+  
+  
+  # Tree map ---------------------------------------------------------------------
+  
+  make_treemap(data = test_microbiome,
+               classification = "family",
+               max = 10)
+  
+  make_dual_treemap(data = test_microbiome,
+                    classification1 = "order",
+                    classification2 = "family",
+                    max = 10)
+  
+  # Network ----------------------------------------------------------------------
+  
+  create_network(data = all_samples,
+                 taxonomic_level = "genus",
+                 max_dist = 1)
+  
+}
 
-# Controls --------------------------------------------------------------------
-
-plot_controls()
-
-# PCoA -------------------------------------------------------------------------
-
-do_pcoa(data = all_samples, 
-        classification = "phylum")
-
-
-# Tree map ---------------------------------------------------------------------
-
-make_treemap(data = test_microbiome,
-             classification = "family",
-             max = 10)
-
-make_dual_treemap(data = test_microbiome,
-             classification1 = "order",
-             classification2 = "family",
-             max = 10)
-
-# Network ----------------------------------------------------------------------
-
-create_network(data = all_samples,
-               taxonomic_level = "genus",
-               max_dist = 1)
-
-
-# Run from BASH ----------------------------------------------------------------
 
