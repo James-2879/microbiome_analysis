@@ -18,19 +18,8 @@ library(tidyverse)
 # Don't execute if running from command line
 if (interactive()) {
   source("tools/data.R")
-  load_data()
+  load_data(path = script_dir)
 }
-
-# Example functions ------------------------------------------------------------
-
-# Will not work until day, location, type exist in data etc,
-# make_barplot(test_microbiome)
-# make_stacked_barplot(test_microbiome)
-# make_horizontal_stacked_barplot(test_microbiome)
-# make_compressed_stacked_barplot(test_microbiome)
-# make_heatmap(test_microbiome)
-# make_univar_heatmap(test_microbiome)
-# make_multivar_heatmap(test_microbiome)
 
 # Notes ------------------------------------------------------------------------
 
@@ -46,6 +35,24 @@ if (interactive()) {
   # Evaluate abundance assays against controls
   
   plot_controls()
+  
+  # Barplot -------------------------------------------------------------------
+  # May not work until day, location, type exist in data etc.
+  
+  try({
+    make_barplot(all_samples, classification = "order")
+    make_stacked_barplot(all_samples, classification = "order")
+    make_horizontal_stacked_barplot(all_samples, classification = "order")
+    make_compressed_stacked_barplot(all_samples, classification = "order")
+  })
+  
+  # Heatmap -------------------------------------------------------------------
+  # May not work until day, location, type exist in data etc.
+  try({
+    make_heatmap(all_samples, classification = "order")
+    make_univar_heatmap(all_samples, classification = "order")
+    make_multivar_heatmap(all_samples, classification = "order")
+  })
   
   # Density --------------------------------------------------------------------
   # Evaluate abundance density similarity across samples/repeats

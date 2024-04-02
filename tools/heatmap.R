@@ -1,12 +1,13 @@
 library(ComplexHeatmap)
 library(circlize)
 
-make_heatmap <- function(data) {
+make_heatmap <- function(data, classification) {
   # Make a simple heatmap, dendrogram unavailable
   # Can plot one var pair in x/y, and another across facets
   # Use long data
   summary_data <- data %>%
-    filter(type == "INF") %>%
+    rename("organism" = classification) %>% 
+    # filter(type == "INF") %>%
     group_by(day, type, location, organism) %>%
     summarize(
       mean_abundance = mean(abundance),
@@ -25,12 +26,13 @@ make_heatmap <- function(data) {
   return(plot)
 }
 
-make_univar_heatmap <- function(data) {
+make_univar_heatmap <- function(data, classification) {
   # Uses filters to plot only a single variable against abundance
   # Take data as long and pivot to wide
   summary_data <- data %>%
-    filter(location == "OW") %>%
-    filter(type == "INF") %>%
+    rename("organism" = classification) %>% 
+    # filter(location == "OW") %>%
+    # filter(type == "INF") %>%
     # filter(day == "D6") %>% 
     group_by(organism, day, location, type) %>%
     summarize(
@@ -64,11 +66,12 @@ make_univar_heatmap <- function(data) {
   return(plot)
 }
 
-make_multivar_heatmap <- function(data) {
+make_multivar_heatmap <- function(data, classification) {
   # Plot a heatmap containing all vars
   # Take data as long and pivot to wide
   summary_data <- data %>%
-    filter(type == "INF") %>% # Filter out controls
+    rename("organism" = classification) %>% 
+    # filter(type == "INF") %>% # Filter out controls
     group_by(organism, day, location, type) %>%
     summarize(
       mean_abundance = mean(abundance) # Calculate mean from repeats

@@ -1,10 +1,11 @@
 library(forcats)
 library(tidyverse)
 
-make_barplot <- function(data) {
+make_barplot <- function(data, classification) {
   # data should be long
   summary_data <- data %>%
-    filter(location == "OW") %>% 
+    rename("organism" = classification) %>% 
+    # filter(location == "OW") %>%
     group_by(day, type, location, organism) %>%
     summarize(
       mean_abundance = mean(abundance),
@@ -27,11 +28,12 @@ make_barplot <- function(data) {
   
 }
 
-make_stacked_barplot <- function(data) {
+make_stacked_barplot <- function(data, classification) {
   # data should be long
   summary_data <- data %>%
+    rename("organism" = classification) %>% 
     # filter(location == "OW") %>% 
-    filter(type == "CTRL") %>% 
+    # filter(type == "CTRL") %>% 
     group_by(day, type, location, organism) %>%
     summarize(
       mean_abundance = mean(abundance),
@@ -51,9 +53,10 @@ make_stacked_barplot <- function(data) {
   
 }
 
-make_horizontal_stacked_barplot <- function(data) {
+make_horizontal_stacked_barplot <- function(data, classification) {
   # data should be long
   summary_data <- data %>%
+    rename("organism" = classification) %>% 
     # filter(location == "OW") %>% 
     # filter(type == "INF") %>% 
     group_by(day, type, location, organism) %>%
@@ -75,9 +78,10 @@ make_horizontal_stacked_barplot <- function(data) {
   
 }
 
-make_compressed_stacked_barplot <- function(data) {
+make_compressed_stacked_barplot <- function(data, classification) {
   # data should be long
   summary_data <- data %>%
+    rename("organism" = classification) %>% 
     # filter(location == "OW") %>% 
     # filter(type == "INF") %>% 
     group_by(day, type, location, organism) %>%
