@@ -1,6 +1,6 @@
-load_data <- function() {
+load_data <- function(path) {
   # Globally load all data to R environment
-  test_microbiome <<- read_tsv("data/input/test_microbiome.tsv") %>% 
+  test_microbiome <<- read_tsv(paste0(path, "data/input/test_microbiome.tsv")) %>% 
     mutate("domain" = str_split_i(taxonomy, ";", -8)) %>% 
     mutate("kingdom" = str_split_i(taxonomy, ";", -7)) %>% 
     mutate("phylum" = str_split_i(taxonomy, ";", -6)) %>% 
@@ -12,14 +12,16 @@ load_data <- function() {
     mutate(species = tolower(species)) %>% 
     mutate(scientific_name = paste(genus, species))
   
-  reference_abundances <<- read_tsv("data/input/control_reference_table.txt")
+  reference_abundances <<- read_csv(paste0(path, "data/input/control_reference_table.txt")) %>% 
+    mutate(genus = str_split_i(scientific_name, " ", 1)) %>% 
+    mutate(species = str_split_i(scientific_name, " ", 2))
   
   # Make these variable names better
-  sample_1 <<- read_tsv("data/input/sample_1.tsv") %>%
+  sample_1 <<- read_tsv(paste0(path, "data/input/sample_1.tsv")) %>%
     mutate("repeat" = "1")
-  sample_2 <<- read_tsv("data/input/sample_2.tsv") %>%
+  sample_2 <<- read_tsv(paste0(path, "data/input/sample_2.tsv")) %>%
     mutate("repeat" = "2")
-  sample_3 <<- read_tsv("data/input/sample_3.tsv") %>%
+  sample_3 <<- read_tsv(paste0(path, "data/input/sample_3.tsv")) %>%
     mutate("repeat" = "3")
   
   # Make this variable name better

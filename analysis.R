@@ -1,9 +1,12 @@
-script_dir <- "/home/james/Documents/microbiome_analysis/"
-setwd(script_dir)
+if (interactive()) {
+  script_dir <- "/home/james/Documents/microbiome_analysis/"
+  setwd(script_dir)
+}
 
 source("tools/themes.R")
 source("tools/controls.R")
 source("tools/treemap.R")
+source("tools/density.R")
 source("tools/barplot.R")
 source("tools/pcoa.R")
 source("tools/heatmap.R")
@@ -78,4 +81,7 @@ if (interactive()) {
   
 }
 
+# jpeg("treemap.jpeg", height = 2160, width = 3840, res = 300)
+# plot
+# dev.off()
 

@@ -5,22 +5,12 @@ plot_controls <- function() {
 
 # TODO Order the blocks such that they are in height order
 
-# Manufacturer relative abundance references
-reference_table <- read_csv("data/input/control_reference_table.txt") %>% 
-  mutate(genus = str_split_i(scientific_name, " ", 1)) %>% 
-  mutate(species = str_split_i(scientific_name, " ", 2))
-
 # Tidy relative abundances from controls
-control <- read_tsv("data/input/test_microbiome.tsv") %>% 
-  filter(taxonomy != "Unassigned") %>% 
-  mutate("genus" = str_split_i(taxonomy, ";", -2)) %>% 
-  mutate("species" = str_split_i(taxonomy, ";", -1)) %>% 
-  mutate(species = tolower(species)) %>% 
+control <- test_microbiome %>% 
   filter(!is.na(genus)) %>% 
   filter(!is.na(species)) %>% 
   filter(genus != species) %>% 
-  mutate(scientific_name = paste(genus, species)) %>% 
-  filter(genus %in% reference_table$genus)
+  filter(genus %in% reference_abundances$genus)
 
 # Sum abundance by genus
 grouped_control <- control %>% 
@@ -32,7 +22,7 @@ grouped_control_percentage <- grouped_control %>%
   mutate(ctrl1_abundance = (ctrl1_abundance/sum(grouped_control$ctrl1_abundance))*100)
 
 # Wrangle for use in next code block
-selected_references <- reference_table %>% 
+selected_references <- reference_abundances %>% 
   select(genus, abundance) %>% 
   rename("ref_abundance" = abundance)
 
