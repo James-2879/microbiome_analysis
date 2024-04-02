@@ -23,7 +23,9 @@ make_barplot <- function(data, classification) {
     geom_errorbar(aes(ymin = min_abundance, ymax = max_abundance),
                   width = 0.2,
                   position = position_dodge(width = 0.9)) +
-    facet_wrap("organism")
+    facet_wrap("organism") +
+    scale_fill_viridis(discrete = TRUE, option = "A") +
+    theme_minimal()
   return(plot)
   
 }
@@ -48,7 +50,9 @@ make_stacked_barplot <- function(data, classification) {
     )
     ) +
     geom_bar(stat = "identity", position = "fill") +
-    facet_wrap("location")
+    facet_wrap("location") +
+    scale_fill_viridis(discrete = TRUE, option = "A") +
+    theme_minimal()
   return(plot)
   
 }
@@ -73,7 +77,9 @@ make_horizontal_stacked_barplot <- function(data, classification) {
     )
     ) +
     geom_bar(stat = "identity", position = "fill") +
-    facet_grid(c("day", "type"))
+    facet_grid(c("day", "type")) +
+    scale_fill_viridis(discrete = TRUE, option = "A") +
+    theme_minimal()
   return(plot)
   
 }
@@ -106,6 +112,8 @@ make_compressed_stacked_barplot <- function(data, classification) {
                          fill = organism
     )
     ) +
-    geom_bar(stat = "identity", position = "fill")
+    geom_bar(stat = "identity", position = "fill") +
+    scale_fill_viridis(discrete = TRUE, option = "A") +
+    theme_minimal()
   return(plot)
 }
