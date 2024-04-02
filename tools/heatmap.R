@@ -22,7 +22,8 @@ make_heatmap <- function(data, classification) {
     )
     ) +
     geom_tile() +
-    facet_grid(rows = vars(`location`))
+    facet_grid(rows = vars(`location`)) +
+    theme_minimal()
   return(plot)
 }
 
