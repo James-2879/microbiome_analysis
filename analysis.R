@@ -82,9 +82,14 @@ if (interactive()) {
   # Network --------------------------------------------------------------------
   # Identify clusters of linked abundances
   
-  create_network(data = all_samples,
+  physeq_object <- create_physeq_object(data = all_samples)
+  
+  create_network_phyloseq(physeq_object = physeq_object,
                  taxonomic_level = "genus",
                  max_dist = 1)
+  
+  create_network_meco(physeq_object = physeq_object,
+                      plot_method = "physeq")
   
 }
 
