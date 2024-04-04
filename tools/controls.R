@@ -33,16 +33,24 @@ controls_references <- grouped_control_percentage %>%
   mutate(percent_abundance = if_else(is.na(percent_abundance), 0, percent_abundance))
 
 # Plot controls against abundances
-plot_data <- controls_references %>% 
+plot_data <<- controls_references %>% 
   mutate(group = if_else(group == "ctrl1_abundance", "Control", group)) %>% 
-  mutate(group = if_else(group == "ref_abundance", "Reference", group))
+  mutate(group = if_else(group == "ref_abundance", "Reference", group)) %>% 
+  arrange(percent_abundance)
 
-unique_levels <- plot_data$genus
+unique_levels <<- plot_data %>% 
+  filter(group == "Reference") %>%
+  arrange(desc(percent_abundance)) %>%
+  pull(genus)
 set.seed(123)  # For reproducibility
 custom_palette <- sample(viridis_pal(option = "A")(length(unique_levels)))
 
 # Assign colors to factor levels
 color_mapping <- setNames(custom_palette, unique_levels)
+
+# Set order of bars based on abundance
+plot_data$genus <- factor(plot_data$genus, levels = unique_levels) 
+
 
 plot <- plot_data %>% 
   ggplot(mapping = aes(x = group,
