@@ -52,8 +52,9 @@ do_pcoa <- function(data, classification) {
   pcoa_plot <- ggplot(pcoa_df,
                       mapping = aes(x = PCoA1,
                                     y = PCoA2,
-                                    color = organism,
-                                    shape = `repeat`)) +
+                                    color = organism
+                                    # shape = `repeat` # Maybe we don't want this bit
+                                    )) +
     geom_point() +
     theme_minimal()
   pcoa_plot
