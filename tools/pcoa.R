@@ -1,7 +1,7 @@
 library(vegan)
 library(tidyverse)
 
-do_pcoa <- function(data, classification) {
+do_pcoa <- function(data) {
   
   ### Should abundances be relative to each other at this point
   ### I mean they probably are already if they're percentages
@@ -9,8 +9,7 @@ do_pcoa <- function(data, classification) {
   # Filter data to be used in analysis
   # Change shape for PCoA analysis
   pcoa_data <<- data %>% 
-    rename("organism" = classification) %>% 
-    select(c(organism, abundance, day, location, type, `repeat`)) %>% 
+    select(c(scientific_name, abundance, day, location, type, `repeat`)) %>% 
     mutate(`repeat` = paste0("repeat_", `repeat`)) %>% 
     group_by(day, location, type, `repeat`) %>%
     summarise("abundance" = sum(abundance)) %>%

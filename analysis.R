@@ -68,8 +68,7 @@ if (interactive()) {
   # PCoA -----------------------------------------------------------------------
   # Evaluate beta-diversity
   
-  do_pcoa(data = all_samples, 
-          classification = "phylum")
+  do_pcoa(data = all_samples)
   
   
   # Tree map -------------------------------------------------------------------
