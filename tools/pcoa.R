@@ -11,13 +11,14 @@ do_pcoa <- function(data, classification) {
   pcoa_data <<- data %>% 
     rename("organism" = classification) %>% 
     select(c(organism, abundance, day, location, type, `repeat`)) %>% 
-    group_by(organism, day, location, type, `repeat`) %>%
+    mutate(`repeat` = paste0("repeat_", `repeat`)) %>% 
+    group_by(day, location, type, `repeat`) %>%
     summarise("abundance" = sum(abundance)) %>%
-    pivot_wider(names_from = organism, values_from = abundance) %>% 
+    pivot_wider(names_from = `repeat`, values_from = abundance) %>% 
     select_if(~all(complete.cases(.)))
   
   pcoa_data <- pcoa_data %>% 
-    pivot_longer(cols = 5:length(pcoa_data), values_to = "abundance", names_to = "organism")
+    pivot_longer(cols = 4:length(pcoa_data), values_to = "abundance", names_to = "repeat")
   
   # Add a sample ID column for later 
   # (annotations and data need to be split for analysis)
@@ -29,9 +30,9 @@ do_pcoa <- function(data, classification) {
   
   # Split off the data frames
   abundance_df <<- pcoa_data %>% 
-    select(-c(location, day, type, `repeat`, organism))
+    select(-c(location, day, type, `repeat`))
   annotations_df <<- pcoa_data %>% 
-    select(c(organism, location, day, type, `repeat`)) %>% 
+    select(c(location, day, type, `repeat`)) %>% 
     rownames_to_column(var = "sample_ids")
   
   # Calculate distances using Bray-Curtis method
@@ -52,7 +53,7 @@ do_pcoa <- function(data, classification) {
   pcoa_plot <- ggplot(pcoa_df,
                       mapping = aes(x = PCoA1,
                                     y = PCoA2,
-                                    color = organism
+                                    color = `repeat`
                                     # shape = `repeat` # Maybe we don't want this bit
                                     )) +
     geom_point() +

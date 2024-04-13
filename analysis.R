@@ -15,6 +15,11 @@ source("tools/cross_feeding_network.R")
 
 library(tidyverse)
 
+# sort out eukaryote classifications - try to use phyloseq for this
+# silva database 138.1
+# ignore substrains
+# how do we deal with entries are missing genus or species -- do we ignore them
+
 # Don't execute if running from command line
 if (interactive()) {
   source("tools/data.R")
