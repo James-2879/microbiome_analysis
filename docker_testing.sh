@@ -9,9 +9,6 @@ echo ""
 echo "> Removing image if present"
 sudo docker image rm microbiome-analysis
 echo ""
-echo "> Copying necessary files"
-cp -r ~/Documents/microbiome_analysis/ ~/Documents/microbiome_analysis/
-echo ""
 echo "> Building image"
 DOCKER_BUILDKIT=1 sudo docker build -t microbiome-analysis .
 echo ""

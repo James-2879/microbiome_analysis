@@ -78,12 +78,13 @@ message("> Generating plot")
 
 # PCoA
 if (args$f == "do_pcoa") {
-  jpeg(paste0(args$output, "pcoa.jpeg"), height = 2160, width = 3840, res = 300)
+  jpeg(args$output, height = 2160, width = 3840, res = 300)
   suppressMessages(do_pcoa(data = user_data)) # dev.off() not required
-  message(paste0("[OK] Saved output to ", args$output))
-  message("> Done, exiting")
-  quit()
 }
+
+message(paste0("[OK] Saved output to ", args$output))
+message("> Done, exiting")
+quit()
 
 if (args$f == "make_barplot") {
   # unpack args first
