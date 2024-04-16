@@ -3,6 +3,7 @@ if (interactive()) {
   setwd(script_dir)
 }
 
+source("tools/data.R")
 source("tools/themes.R")
 source("tools/controls.R")
 source("tools/treemap.R")
@@ -22,7 +23,6 @@ library(tidyverse)
 
 # Don't execute if running from command line
 if (interactive()) {
-  source("tools/data.R")
   load_data(path = script_dir)
 }
 
@@ -67,9 +67,8 @@ if (interactive()) {
   
   # PCoA -----------------------------------------------------------------------
   # Evaluate beta-diversity
-  
+
   do_pcoa(data = all_samples)
-  
   
   # Tree map -------------------------------------------------------------------
   # Evaluate alpha-diversity
@@ -96,8 +95,4 @@ if (interactive()) {
                       plot_method = "physeq")
   
 }
-
-# jpeg("treemap.jpeg", height = 2160, width = 3840, res = 300)
-# plot
-# dev.off()
 

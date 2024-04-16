@@ -19,16 +19,12 @@ parser$add_argument("-o", "--output",
                     type = "character",
                     default = NULL,
                     help = "full path to save images to")
-parser$add_argument
 args <- parser$parse_args()
-
 
 if (args$options) {
   message('Available functions')
   message("-------------------")
-  message("0 - Empty")
-  message("1 - Function 1")
-  message("0 - Function 2")
+  message("do_pcoa")
   message("-------------------")
   message("Specify as an argument like '--function function_name'")
   quit()
@@ -40,15 +36,54 @@ if (args$options) {
   quit()
 }
 
-tryCatch({
-  # try
-  user_data <- read_tsv(args$data)
-}, error = function(error) {
-  # error handling
-  message("[!!] Unable to read tsv, see error below...")
-  message(error)
+# Configure session ----
+message("> Preparing session and data")
+
+suppressPackageStartupMessages({
+  ## Load core library 
+  library(tidyverse)
+  
+  ## Load tools and extra libraries 
+  source("tools/data.R")
+  source("tools/themes.R")
+  source("tools/controls.R")
+  source("tools/treemap.R")
+  source("tools/density.R")
+  source("tools/barplot.R")
+  source("tools/pcoa.R")
+  source("tools/heatmap.R")
+  source("tools/co_network.R")
+  source("tools/cross_feeding_network.R")
 })
 
+message("[OK] Loaded packages")
+message("[OK] Sourced tools")
+
+# Attempt to read in user data
+tryCatch({
+  user_data <- suppressMessages(read_tsv(args$data))
+  message("[OK] Loaded data")
+}, error = function(error) {
+  message("[!!] Unable to read tsv, see error below...")
+  message(error)
+  message("[**] Aborting - check input")
+  quit()
+})
+
+# Check data is in expected format
+check_data(user_data)
+user_data <- tidy_data(user_data)
+
+message("> Generating plot")
+
+# PCoA
+if (args$f == "do_pcoa") {
+  jpeg(paste0(args$output, "pcoa.jpeg"), height = 2160, width = 3840, res = 300)
+  suppressMessages(do_pcoa(data = user_data)) # dev.off() not required
+  message(paste0("[OK] Saved output to ", args$output))
+  message("> Done, exiting")
+  quit()
+}
 
 if (args$f == "make_barplot") {
   # unpack args first
@@ -58,9 +93,9 @@ if (args$f == "make_barplot") {
 }
 
 
-# Parse out extra arguments
-if (length(args$extra) > 0) {
-  for (arg in args$extra) {
-    print(arg)
-  }
-}
+# TODO Parse out extra arguments
+# if (length(args$extra) > 0) {
+#   for (arg in args$extra) {
+#     print(arg)
+#   }
+# }
