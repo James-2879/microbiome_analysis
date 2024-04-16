@@ -7,7 +7,7 @@
 
 ```
 R -e "install.packages('renv')"
-R -e "renv::restore('microbiome_analysis/')"
+R -e "renv::restore()"
 ```
 
 ### Running interactively
