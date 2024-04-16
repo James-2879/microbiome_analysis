@@ -16,4 +16,4 @@ echo "> Launching container"
 sudo docker run -d --name microbiome-analysis-container microbiome-analysis
 echo ""
 
-# docker exec -it iot-dashboard-container /bin/bash
+# docker exec -it microbiome-analysis-container /bin/bash
