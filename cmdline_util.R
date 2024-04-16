@@ -1,5 +1,9 @@
 library(argparse)
 
+# Docker
+# script_dir <- "/usr/local/bin/microbiome_analysis/"
+# setwd(script_dir)
+
 parser <- ArgumentParser(description = "R microbiome analysis utility")
 parser$add_argument("--options",
                     action = "store_true",
@@ -40,6 +44,7 @@ if (args$options) {
 message("> Preparing session and data")
 
 suppressPackageStartupMessages({
+  
   ## Load core library 
   library(tidyverse)
   
