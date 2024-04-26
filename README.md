@@ -1,33 +1,32 @@
-## Setup
+# Microbiome Analysis
+
+Collection of tools to visualize microbiological abundance data.
+
+## Local setup
 
 1. Clone repo and `cd`
-2. Run `setup.sh`
-    - This sets up data directories
-3. Install required libraries
-
-```
-R -e "install.packages('renv')"
-R -e "renv::restore()"
-```
+2. Run `local_setup.sh` to install necessary dependencies
 
 ### Running interactively
 
-Use any of the tools from within `analysis.R` - this sets up the environment and source tools etc. Change `script_dir` at top of file.
+Use any of the tools from within `analysis.R` - this sets up the environment and source tools etc. Change `script_dir` at the top of the file.
+
+> [!NOTE]
+> 'analysis.R' is prinmarily just a set of example functions.
 
 ### Running from CLI
 
 1. `cd` to `microbiome_analysis` directory
-2. Run commands like `Rscript cmdline_util.R --help`
+2. Run commands like `Rscript file.R --help`
 
 **Example**
 
 ```
-Rscript cmdline_util.R --function do_pcoa --data path/to/data.tsv --output path/to/file.extension
+Rscript pcoa.R --data path/to/data.tsv --output path/to/file.extension
 ```
 
-### Running inside Docker
+## Running inside Docker
 
-1. Uncomment lines for Docker at start of `cmdline_util.R`
-2. `cd` to `microbiome_analysis` directory
-3. Run `docker_testing.sh` to build image and start container
-4. Use `run_in_docker.sh` as a guide for copying files into and executing commands within the container
+1. `cd` to `microbiome_analysis` directory
+2. Run `docker_testing.sh` to build image and start container
+3. Use `run_in_docker.sh` as a guide for copying files into and executing commands within the container
