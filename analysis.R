@@ -68,7 +68,24 @@ if (interactive()) {
   # PCoA -----------------------------------------------------------------------
   # Evaluate beta-diversity
 
-  do_pcoa(data = all_samples)
+  test_microbiome_2 <- test_microbiome %>% 
+    mutate("repeat" = "4") %>% 
+    rename("Taxa" = taxonomy) %>% 
+    mutate("day" = "default") %>% 
+    mutate("location" = "default") %>% 
+    mutate("type" = "default")
+  
+  reference_abundances_2 <- reference_abundances %>% 
+    mutate("repeat" = "5") %>% 
+    mutate("day" = "default") %>% 
+    mutate("location" = "default") %>% 
+    mutate("type" = "default") %>% 
+    mutate("abundance" = abundance*505)
+  
+  all_samples_with_test <- bind_rows(all_samples, test_microbiome_2)
+  all_samples_with_reference <- bind_rows(all_samples, reference_abundances_2)
+    
+  do_pcoa(data = all_samples_with_test)
   
   # Tree map -------------------------------------------------------------------
   # Evaluate alpha-diversity
