@@ -27,6 +27,7 @@ do_pcoa <- function(data) {
     select_if(~all(complete.cases(.))) %>%
     ungroup()
   
+  # Add sample IDs to join annotations back on later
   pcoa_data <<- pcoa_data %>% 
     mutate("sample_id" = paste0("sample_", seq(1, dim(pcoa_data)[1]))) %>% 
     mutate("sample_id_copy" = sample_id) %>% 
@@ -35,7 +36,7 @@ do_pcoa <- function(data) {
     select(sample_id, everything())
   
   # Calculate distances using Bray-Curtis method
-  ab.dist <- vegdist(pcoa_data[, 6:ncol(pcoa_data)], method="jaccard", diag=FALSE, upper=FALSE)
+  ab.dist <- vegdist(pcoa_data[, 6:ncol(pcoa_data)], method="bray", diag=FALSE, upper=FALSE)
   
   # Perform multidimensional scaling
   pcoa_result <- cmdscale(ab.dist, k = 2)
@@ -64,38 +65,29 @@ do_pcoa <- function(data) {
 
 if (!interactive()) {
   
+  # Load required functions
   message("> Preparing session and data")
-  
   suppressPackageStartupMessages({
-    ## Load tools
     source("tools/data.R")
     source("tools/themes.R")
   })
-  
   message("[OK] Loaded packages")
   message("[OK] Sourced tools")
   
-  tryCatch({
-    user_data <- suppressMessages(read_tsv(args$data))
-    message("[OK] Loaded data")
-  }, error = function(error) {
-    message("[!!] Unable to read tsv, see error below...")
-    message(error)
-    message("[**] Aborting - check input")
-    quit()
-  })
-  
-  # Check data is in expected format
+  # Load data and check against expected format
+  user_data <- load_user_data(args$data)
   check_data(user_data)
   user_data <- tidy_data(user_data)
   
+  # Make and save the plot
   message("> Generating plot")
   jpeg(args$output, height = 2160, width = 3840, res = 300)
   suppressMessages(
     do_pcoa(user_data)
   )
   message(paste0("[OK] Saved plot to ", args$output))
-  message('> Done')
+  
+  message("> Done")
 }
 
 

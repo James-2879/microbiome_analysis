@@ -44,6 +44,21 @@ load_data <- function(path) {
   
 }
 
+# Attempt to load data and print messages to stdout
+load_user_data <- function(path) {
+  tryCatch({
+    user_data <- suppressMessages(read_tsv(path))
+    message("[OK] Loaded data")
+  }, error = function(error) {
+    message("[!!] Unable to read tsv, see error below...")
+    message(error)
+    message("[**] Aborting - check input")
+    quit()
+  })
+  return(user_data)
+}
+
+# Check loaded data is in correct format
 check_data <- function(data) {
   expected_cols <- c("taxa", "abundance", "day", "location", "repeat", "type")
   if (sum(expected_cols %in% tolower(colnames(data))) == length(expected_cols)) {
@@ -58,6 +73,7 @@ check_data <- function(data) {
   }
 }
 
+# Mostly taxa splitting
 tidy_data <- function(data) {
   colnames(data) <- tolower(colnames(data))
   data <- data %>% 
