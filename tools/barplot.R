@@ -18,6 +18,10 @@ parser$add_argument("-p", "--plot",
                     type = "character",
                     default = NULL,
                     help = "barplot type; one of: standard, v-stacked, h-stacked")
+parser$add_argument("-l", "--level",
+                    type = "character",
+                    default = NULL,
+                    help = "taxonomic level; probably one of genus or species")
 args <- parser$parse_args()
 
 make_barplot <- function(data, classification) {
@@ -160,19 +164,24 @@ if (!interactive()) {
   # Make and save the plot
   message("> Generating plot")
   jpeg(args$output, height = 2160, width = 3840, res = 300)
-  # suppressMessages(
-    if (args$plot == "standard") {
-      make_barplot(user_data, classification = "order")
-    } else if (args$plot == "v-stacked") {
-      make_stacked_barplot(user_data, classification = "order")
-    } else if (args$plot == "h-stacked") {
-      make_horizontal_stacked_barplot(user_data, classification = "order")
-    } else {
-      message("[!!] Unknown plot type - check docs")
-      message("> Exiting")
-      quit()
-    }
-  # )
+  if (args$plot == "standard") {
+    # There is a warning message with the vector selection - look into this
+    suppressMessages(
+      make_barplot(user_data, classification = args$level)
+    )
+  } else if (args$plot == "v-stacked") {
+    suppressMessages(
+      make_stacked_barplot(user_data, classification = args$level)
+    )
+  } else if (args$plot == "h-stacked") {
+    suppressMessages(
+      make_horizontal_stacked_barplot(user_data, classification = args$level)
+    )
+  } else {
+    message("[!!] Unknown plot type - check docs")
+    message("> Exiting")
+    quit()
+  }
 }
 
 if (!interactive()) {
