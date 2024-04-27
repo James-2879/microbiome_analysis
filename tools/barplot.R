@@ -28,7 +28,7 @@ make_barplot <- function(data, classification) {
   # data should be long
   summary_data <- data %>%
     mutate("repeat" = as.character(`repeat`)) %>% 
-    rename("organism" = classification) %>% 
+    rename("organism" = all_of(classification)) %>% 
     # filter(location == "OW") %>%
     group_by(day, `repeat`, type, location, organism) %>%
     summarize(
@@ -58,7 +58,7 @@ make_barplot <- function(data, classification) {
 make_stacked_barplot <- function(data, classification) {
   # data should be long
   summary_data <- data %>%
-    rename("organism" = classification) %>% 
+    rename("organism" = all_of(classification)) %>% 
     group_by(day, type, `repeat`, location, organism) %>%
     summarize(
       mean_abundance = mean(abundance),
@@ -84,7 +84,7 @@ make_stacked_barplot <- function(data, classification) {
 make_horizontal_stacked_barplot <- function(data, classification) {
   # data should be long
   summary_data <- data %>%
-    rename("organism" = classification) %>% 
+    rename("organism" = all_of(classification)) %>% 
     mutate("repeat" = as.character(`repeat`)) %>% 
     group_by(day, type, `repeat`, location, organism) %>%
     summarize(
@@ -111,7 +111,7 @@ make_horizontal_stacked_barplot <- function(data, classification) {
 make_compressed_stacked_barplot <- function(data, classification) {
   # data should be long
   summary_data <- data %>%
-    rename("organism" = classification) %>% 
+    rename("organism" = all_of(classification)) %>% 
     # filter(location == "OW") %>% 
     # filter(type == "INF") %>% 
     group_by(day, type, `repeat`, location, organism) %>%
