@@ -12,7 +12,6 @@ source("tools/barplot.R")
 source("tools/pcoa.R")
 source("tools/heatmap.R")
 source("tools/co_network.R")
-source("tools/cross_feeding_network.R")
 
 library(tidyverse)
 
@@ -85,7 +84,7 @@ if (interactive()) {
   all_samples_with_test <- bind_rows(all_samples, test_microbiome_2)
   all_samples_with_reference <- bind_rows(all_samples, reference_abundances_2)
     
-  do_pcoa(data = all_samples_with_test)
+  do_pcoa(data = all_samples)
   
   # Tree map -------------------------------------------------------------------
   # Evaluate alpha-diversity

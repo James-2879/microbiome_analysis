@@ -85,10 +85,12 @@ if (!interactive()) {
   suppressMessages(
     do_pcoa(user_data)
   )
-  message(paste0("[OK] Saved plot to ", args$output))
-  
-  message("> Done")
 }
 
+if (!interactive()) {
+  # Can't be in same block after graphics device as issues with dev.off()
+  message(paste0("[OK] Saved plot to ", args$output))
+  message("> Done")
+}
 
 

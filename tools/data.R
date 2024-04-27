@@ -26,6 +26,7 @@ load_data <- function(path) {
   
   # Make this variable name better
   all_samples <<- bind_rows(sample_1, sample_2, sample_3) %>%
+    rename("taxa" = "Taxa") %>% 
     mutate("domain" = str_split_i(taxa, ";", -8)) %>%
     mutate("kingdom" = str_split_i(taxa, ";", -7)) %>%
     mutate("phylum" = str_split_i(taxa, ";", -6)) %>%
