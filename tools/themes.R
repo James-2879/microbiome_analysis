@@ -1,5 +1,16 @@
 library(tidyverse)
 
+custom_theme_blank = list(
+  theme(
+    panel.border = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    panel.background = element_blank()
+  )
+)
+
 theme_blank_with_legend = list(
   theme(
     panel.border = element_blank(),

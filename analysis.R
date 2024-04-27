@@ -62,7 +62,7 @@ if (interactive()) {
   # Evaluate abundance density similarity across samples/repeats
   
   make_density_plot(data = all_samples,
-                    limits = c(0, 0.0005))
+                    limits = c(0, 0.001))
   
   # PCoA -----------------------------------------------------------------------
   # Evaluate beta-diversity
