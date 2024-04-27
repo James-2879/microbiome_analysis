@@ -12,7 +12,7 @@ Collection of tools to visualize microbiological abundance data.
 Use any of the tools from within `analysis.R` - this sets up the environment and source tools etc. Change `script_dir` at the top of the file.
 
 > [!NOTE]
-> 'analysis.R' is prinmarily just a set of example functions.
+> 'analysis.R' is primarily just a set of example functions.
 
 ### Running from CLI
 
