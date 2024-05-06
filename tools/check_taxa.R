@@ -17,9 +17,8 @@ load_data(script_dir)
 
 # Fetch taxonomic info, either from cache or NCBI
 fetch_taxonomic_info <- function(species_name) {
-  
   file_name <- file.path(cache_dir, paste0(gsub(" ", "_", species_name), ".xml"))
-  
+  tax_info_xml <- NULL
   if (file.exists(file_name)) {
     # Read the XML from the cache
     message(paste0("Fetching entry from cache for ", species_name))
@@ -34,21 +33,26 @@ fetch_taxonomic_info <- function(species_name) {
     search_result <- entrez_search(db="taxonomy", term=species_name)
     tax_id <- search_result$ids[1]
     
-    # Fetch detailed taxonomic information
-    tax_info_xml_raw <- entrez_fetch(db="taxonomy", id=tax_id, rettype="xml")
-    tax_info_xml <- xmlParse(tax_info_xml_raw)
-    
-    # Write XML to cache
-    writeLines(as.character(tax_info_xml_raw), file_name)
+    # Attempt to fetch detailed taxonomic information
+    tryCatch({
+      tax_info_xml_raw <- entrez_fetch(db="taxonomy", id=tax_id, rettype="xml")
+      tax_info_xml <- xmlParse(tax_info_xml_raw)
+      # Write XML to cache
+      writeLines(as.character(tax_info_xml_raw), file_name)
+    }, error = function(error) {
+      message(paste0("[!!] Unable to fetch entry for ", species_name))
+    }
+    )
   }
+  
   return(tax_info_xml)
 }
 
+# Check if a sinlge organism is unicellular
 is_likely_unicellular <- function(xml_list) {
-  # You would have a predefined list of kingdoms, phyla, or classes known to be unicellular
+  # List of known unicellular taxa
   unicellular_taxa <- c("Protista", "Monera", "Archaea", "Bacteria", "Cyanobacteria")
-  
-  # Traversing through the taxonomy to check each rank
+  # Check if each of the taxa are unicellular
   if (any(unlist(xml_list) %in% unicellular_taxa)) {
     return("TRUE")
   } else {
@@ -58,8 +62,8 @@ is_likely_unicellular <- function(xml_list) {
 
 # ----
 
+# Check if each organism in a vector is unicellular
 check_taxa <- function(species_vector) {
-  
   checked_taxa <- map_df(.x = species_vector,
                          .f = function(species) {
                            position <- which(species_vector == species)
@@ -71,9 +75,8 @@ check_taxa <- function(species_vector) {
                                as.data.frame() %>% 
                                add_column("likely_unicellular" = is_likely_unicellular(xml_list))
                              return(result)
-                           }, error = function(e) {
+                           }, error = function(error) {
                              # Non-uniquely handle any error
-                             # print(e)
                              result <- species %>% 
                                as.data.frame() %>% 
                                add_column("likely_unicellular" = "FAILED")
@@ -96,16 +99,19 @@ check_taxa <- function(species_vector) {
   return(checked_taxa)
 }
 
-get_common_names <- function(species_list) {
-  
-  map_chr(.x = species_list,
+# Pull common name for species from NCBI
+get_common_names <- function(species_vector) {
+  map_chr(.x = species_vector,
           .f = function(species) {
-            
-            suppressMessages({
-              species_info <- fetch_taxonomic_info(species)
-            })
+            position <- which(species_vector == species)
+            cat(paste0("Searching ", position, " of ", length(species_vector), "\r"))
+            species_info <- fetch_taxonomic_info(species)
+            if (!is.null(species_info)) {
             xml_list <- xmlToList(species_info)
             common_name <- xml_list[["Taxon"]][["OtherNames"]][["GenbankCommonName"]]
+            } else {
+              common_name <- "NON FOUND"
+            }
             if (!is.null(common_name)) {
               names <- paste0(species, ": ", common_name)
             } else {
@@ -113,7 +119,6 @@ get_common_names <- function(species_list) {
             }
             return(names)
           })
-  
 }
 
 
@@ -133,4 +138,3 @@ if (interactive()) {
   common_names <- get_common_names(to_name)
   common_names
 }
-
