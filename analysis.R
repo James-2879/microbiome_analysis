@@ -12,6 +12,7 @@ source("tools/barplot.R")
 source("tools/pcoa.R")
 source("tools/heatmap.R")
 source("tools/co_network.R")
+source('tools/updated_controls.R')
 
 library(tidyverse)
 
@@ -112,3 +113,16 @@ if (interactive()) {
   
 }
 
+
+
+# final_samples <- final_samples %>%a
+#   mutate(source = sub("\\.tsv$", "", source)) %>%
+#   separate(source, into = c("sample", "minimap_thresh", "samtools_score", "qiime_thresh", "kk_overlap", "kk_min_conf"), sep = "_")
+
+# write_tsv(final_samples, "~/Documents/microbiome_analysis/data/input/final_samples.tsv")
+
+final_samples <- read_tsv("~/Documents/microbiome_analysis/data/input/final_samples.tsv")
+
+plot_controls(samples = final_samples)
+
+best <- analyse_processing_configs(samples = final_samples, best_method = TRUE)

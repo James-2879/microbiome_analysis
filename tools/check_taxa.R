@@ -138,3 +138,39 @@ if (interactive()) {
   common_names <- get_common_names(to_name)
   common_names
 }
+
+if (interactive()) {
+  species_vector <- all_samples %>% 
+    pull(scientific_name) %>% 
+    unique(.)
+  
+  checked_taxa <- check_taxa(species_vector)
+  
+  to_name <- checked_taxa %>% 
+    filter(likely_unicellular == "FALSE") %>% 
+    pull(species)
+  
+  common_names <- get_common_names(to_name)
+  common_names
+}
+
+assigned_taxa <- unique(all_samples$taxa)
+assigned_taxa <- unique(test_microbiome$taxonomy)
+
+count_missing_substrings <- function(string, expected_count = 8) {
+  # Split the string by semicolon
+  substrings <- strsplit(string, ";")[[1]]
+  # Calculate the number of substrings
+  num_substrings <- length(substrings)
+  # Calculate and return missing count
+  max(0, expected_count - num_substrings)
+}
+
+# Apply the function to each string in the vector and create a data frame
+result_df <- data.frame(
+  Original_String = assigned_taxa,
+  Missing_Substrings = sapply(assigned_taxa, count_missing_substrings)
+)
+
+num_with_missing <- sum(result_df$Missing_Substrings > 0)
+
