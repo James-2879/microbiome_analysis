@@ -39,7 +39,9 @@ if (interactive()) {
   # Controls -------------------------------------------------------------------
   # Evaluate abundance assays against controls
   
-  plot_controls()
+  final_samples <- read_tsv("~/Documents/microbiome_analysis/data/input/final_samples.tsv")
+  plot_controls(samples = final_samples)
+  best <- analyse_processing_configs(samples = final_samples, best_method = TRUE)
   
   # Barplot -------------------------------------------------------------------
   # May not work until day, location, type exist in data etc.
@@ -85,6 +87,15 @@ if (interactive()) {
   all_samples_with_test <- bind_rows(all_samples, test_microbiome_2)
   all_samples_with_reference <- bind_rows(all_samples, reference_abundances_2)
     
+  pcoa_final_samples <- final_samples %>% 
+    rename("scientific_name" = "species") %>% 
+    rename("repeat" = "sample") %>% 
+    unite("type", 5:9, sep = "_") %>% 
+    mutate("day" = "default") %>% 
+    mutate("location" = "default")
+  
+  do_pcoa(data = pcoa_final_samples)
+  
   do_pcoa(data = all_samples)
   
   # Tree map -------------------------------------------------------------------
@@ -121,8 +132,4 @@ if (interactive()) {
 
 # write_tsv(final_samples, "~/Documents/microbiome_analysis/data/input/final_samples.tsv")
 
-final_samples <- read_tsv("~/Documents/microbiome_analysis/data/input/final_samples.tsv")
 
-plot_controls(samples = final_samples)
-
-best <- analyse_processing_configs(samples = final_samples, best_method = TRUE)

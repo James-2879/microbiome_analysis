@@ -2,6 +2,7 @@ suppressPackageStartupMessages({
   library(vegan)
   library(tidyverse)
   library(argparse)
+  library(ggrepel)
 })
 
 parser <- ArgumentParser(description = "R microbiome analysis utility")
@@ -42,7 +43,7 @@ do_pcoa <- function(data) {
   pcoa_result <- cmdscale(ab.dist, k = 2)
   
   # Rename PCoA columns
-  pcoa_df <- as.data.frame(pcoa_result) %>% 
+  pcoa_df <<- as.data.frame(pcoa_result) %>% 
     rownames_to_column(var = "sample_id") %>% 
     rename("PCoA1" = V1,
            "PCoA2" = V2) %>% 
@@ -51,10 +52,14 @@ do_pcoa <- function(data) {
   # Plot the scaled distances
   pcoa_plot <- ggplot(pcoa_df,
                       mapping = aes(x = PCoA1,
-                                    y = PCoA2#,
-                                    # color = `repeat`
+                                    y = PCoA2,
+                                    color = `repeat`
                       )) +
     geom_point() +
+    geom_text_repel(aes(label = ifelse(`type` %in% c("M2_MM-50_ST-1_Q-0.6_KKc-0.01_KKhg-4"), `type`, "")),
+                    box.padding = 0.5,
+                    point.padding = 0.5,
+                    segment.color = "grey50") +
     theme_minimal()
   pcoa_plot
   
