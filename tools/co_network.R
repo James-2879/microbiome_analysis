@@ -35,7 +35,7 @@ create_physeq_object <- function(data) {
   
   # Taxonomy data
   tax_mat <- cleaned_df %>% 
-    select(-c(scientific_name, Taxa, day, location, type, repeat_1, repeat_2, repeat_3)) %>% 
+    select(-c(Taxa, day, location, type, repeat_1, repeat_2, repeat_3)) %>% 
     as.matrix()
   
   # Convert to phyloseq objects
@@ -69,9 +69,9 @@ create_network_phyloseq <- function(physeq_object, taxonomic_level, max_dist) {
 }
 
 create_network_meco <- function(physeq_object, plot_method = "phyloseq") {
-  meco_object <- phyloseq2meco(physeq_object)
+  meco_object <<- phyloseq2meco(physeq_object)
   
-  meco_network <- trans_network$new(
+  meco_network <<- trans_network$new(
     dataset = meco_object,
     cor_method = "bray",
     # use_WGCNA_pearson_spearman = FALSE,
@@ -103,7 +103,7 @@ create_network_meco <- function(physeq_object, plot_method = "phyloseq") {
   } else if (plot_method == "physeq") {
     # Plot method 2
     network_plot <- plot_network(meco_network$res_network,
-                                 type = "taxa",
+                                 type = "taxa",label = "scientific_name"
     )
     return(network_plot)
   }

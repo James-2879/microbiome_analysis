@@ -56,11 +56,14 @@ do_pcoa <- function(data) {
                                     color = `repeat`
                       )) +
     geom_point() +
-    geom_text_repel(aes(label = ifelse(`type` %in% c("M2_MM-50_ST-1_Q-0.6_KKc-0.01_KKhg-4"), `type`, "")),
-                    box.padding = 0.5,
-                    point.padding = 0.5,
-                    segment.color = "grey50") +
-    theme_minimal()
+    theme(panel.grid.major = element_blank()) +
+    theme(panel.grid.minor = element_blank()) +
+    theme(panel.background = element_blank()) #+
+    # geom_text_repel(aes(label = ifelse(`type` %in% c("MM-50_ST-1_Q-0.6_KKc-0.01_KKhg-4",
+    #                                                  "SM-MM-50_ST-0_Q-0.6_KKc-0.01_KKhg-4"), `type`, "")),
+    #                 box.padding = 0.5,
+    #                 point.padding = 0.1,
+    #                 segment.color = "grey50")
   pcoa_plot
   
   return(pcoa_plot)

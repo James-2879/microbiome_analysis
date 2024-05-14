@@ -1,5 +1,6 @@
 library(tidyverse)
 library(viridis)
+library(scales)
 
 clean_control_data <- function(samples) {
   
@@ -19,26 +20,29 @@ clean_control_data <- function(samples) {
   return(mock_standards)
 }
 
-plot_controls <- function(samples) {
+plot_updated_controls <- function(samples) {
   
   mock_standards <- clean_control_data(samples = samples)
   
   plot <- mock_standards %>% 
-    ggplot(mapping = aes(x = group,
+    ggplot(mapping = aes(x = `sample`,
                          y = abundance,
                          fill = species,
                          label = species
     )
     ) +
     geom_bar(stat = "identity", position = "fill") +
-    facet_wrap("sample") +
+    scale_x_discrete(labels = function(x) str_wrap(str_replace_all(x, "_", " "), width = 15)) +
+    # facet_wrap("sample") +
+    # scale_x_discrete(labels = function(x) str_wrap(x, width = 20)) +
     scale_fill_viridis_d() + # Add in colorblind palette
     labs(title = "Sequenced mock community species abundances versus reference",
          subtitle = "Abundance of each species as a fraction of total abundance",
          x = "Data source",
          y = "Fractional abundance") +
     theme_minimal() +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1))
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5)) +
+    theme(legend.position = "none")
   plot
   
   return(plot)
@@ -102,7 +106,4 @@ analyse_processing_configs <- function(samples, best_method = FALSE) {
   } else {
     return(ranked_methods)
   }
-  
-  
-  
 }
