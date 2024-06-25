@@ -150,8 +150,8 @@ if (!interactive()) {
   # Load required functions
   message("> Preparing session and data")
   suppressPackageStartupMessages({
-    source("tools/data.R")
-    source("tools/themes.R")
+    source("R/data.R")
+    source("R/themes.R")
   })
   message("[OK] Loaded packages")
   message("[OK] Sourced tools")

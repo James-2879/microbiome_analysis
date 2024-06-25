@@ -1,0 +1,9 @@
+Package: microbiome_analysis
+Type: Package
+Title: Suite for Analyzing Processed Nanopore Sequencing Data.
+Version: 0.1.0
+Authors@R: person("James", "Swift", role = c("aut", "cre"))
+Description: Refer to README.
+License: MIT
+RoxygenNote: 7.3.1
+Encoding: UTF-8
