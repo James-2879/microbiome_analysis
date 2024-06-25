@@ -14,5 +14,3 @@ roxygen2::roxygenise(package.dir = "/home/james/Documents/microbiome_analysis/")
 
 # TODO Barplot
 # TODO Networks
-# TODO Heatmao
-# TODO Treemap

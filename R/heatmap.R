@@ -1,14 +1,35 @@
-library(ComplexHeatmap)
-library(circlize)
+suppressPackageStartupMessages({
+  library(ComplexHeatmap)
+  library(circlize)
+})
 
-make_heatmap <- function(data, classification) {
-  # Make a simple heatmap, dendrogram unavailable
-  # Can plot one var pair in x/y, and another across facets
-  # Use long data
+parser <- ArgumentParser(description = "R microbiome analysis utility")
+parser$add_argument("-d", "--data",
+                    type = "character",
+                    default = NULL,
+                    help = "full path to directory containing .tsv files")
+parser$add_argument("-c", "--clustering",
+                    type = "character",
+                    default = "FALSE",
+                    help = "use clustering and dendrograms")
+parser$add_argument("-o", "--output",
+                    type = "character",
+                    default = NULL,
+                    help = "full path to save images to")
+args <- parser$parse_args()
+
+
+make_heatmap <- function(data) {
+  #' Create a heatmap of species abundance across sources.
+  #' 
+  #' Makes a clean heatmap but does not include clustering or dendrograms.
+  #' Use 'make_clustered_heatmap()' for these functions.
+  #' 
+  #' @param data data frame
+  #' @returns ggplot object (CLI will save plot as image)
+  
   summary_data <- data %>%
-    rename("organism" = classification) %>% 
-    # filter(type == "INF") %>%
-    group_by(day, type, location, organism) %>%
+    group_by(source, species) %>%
     summarize(
       mean_abundance = mean(abundance),
       min_abundance = min(abundance),
@@ -16,34 +37,37 @@ make_heatmap <- function(data, classification) {
     )
   
   plot <- summary_data %>% 
-    ggplot(mapping = aes(x = `day`,
-                         y = organism,
+    ggplot(mapping = aes(x = source,
+                         y = species,
                          fill = mean_abundance,
     )
     ) +
     geom_tile() +
-    facet_grid(rows = vars(`location`)) +
-    theme_minimal()
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
   return(plot)
 }
 
-make_univar_heatmap <- function(data, classification) {
-  # Uses filters to plot only a single variable against abundance
-  # Take data as long and pivot to wide
-  summary_data <- data %>%
-    rename("organism" = classification) %>% 
-    # filter(location == "OW") %>%
-    # filter(type == "INF") %>%
-    # filter(day == "D6") %>% 
-    group_by(organism, day, location, type) %>%
+make_clustered_heatmap <- function(data) {
+  #' Create a heatmap of species abundance across sources.
+  #' 
+  #' Less clean than ggplot heatmap, but includes clustering and dendrograms
+  #'  for both samples (source) and species. Use 'make_heatmap()' for a simpler
+  #'  but cleaner-looking heatmap.
+  #' 
+  #' @param data data frame
+  #' @returns large HeatmapList (CLI will save plot as image)
+  
+  summary_data <<- data %>%
+    group_by(source, species) %>%
     summarize(
       mean_abundance = mean(abundance)
     ) %>%
     ungroup() %>% 
-    mutate("org" = organism) %>% 
-    select(c(day, organism, mean_abundance)) %>%
-    pivot_wider(names_from = organism, values_from = mean_abundance) %>%
-    column_to_rownames(var = "day") %>% 
+    select(c(source, species, mean_abundance)) %>%
+    pivot_wider(names_from = species, values_from = mean_abundance) %>%
+    column_to_rownames(var = "source") %>% 
+    replace(is.na(.), 0) %>% 
     as.matrix() %>% 
     t()
   
@@ -54,10 +78,10 @@ make_univar_heatmap <- function(data, classification) {
   
   # Create heatmap object
   plot <- Heatmap(mat,
-                  show_column_names = FALSE,
+                  show_column_names = TRUE,
                   row_title = "Organism",
                   col = col_rnorm, # Apply colors set above
-                  column_title = "Day",
+                  column_title = "Source",
                   heatmap_legend_param = list(
                     title = "Scaled abundance",
                     legend_direction = "horizontal",
@@ -67,46 +91,34 @@ make_univar_heatmap <- function(data, classification) {
   return(plot)
 }
 
-make_multivar_heatmap <- function(data, classification) {
-  # Plot a heatmap containing all vars
-  # Take data as long and pivot to wide
-  summary_data <- data %>%
-    rename("organism" = classification) %>% 
-    # filter(type == "INF") %>% # Filter out controls
-    group_by(organism, day, location, type) %>%
-    summarize(
-      mean_abundance = mean(abundance) # Calculate mean from repeats
-    ) %>%
-    ungroup() %>% 
-    unite("annotation", c(day, location), sep = "-") %>% # Merge cols
-    select(c(annotation, organism, mean_abundance)) %>%
-    pivot_wider(names_from = organism, values_from = mean_abundance) %>%
-    column_to_rownames(var = "annotation") %>%
-    as.matrix() %>% 
-    t() # Transpose
+if (!interactive()) {
   
-  # Scale data between -1 and 1
-  mat <- t(scale(t(summary_data)))
-  # Set colors
-  col_rnorm = colorRamp2(c(-1, 0, 1), c("blue", "white", "red"))
+  # Load required functions
+  message("> Preparing session and data")
+  suppressPackageStartupMessages({
+    source("R/data.R")
+    source("R/themes.R")
+  })
+  message("[OK] Loaded packages")
+  message("[OK] Sourced tools")
   
-  # Order matrix columns by day
-  numeric_part <- as.numeric(gsub("[^0-9]", "", colnames(mat))) # Pull numeric values
-  ordered_cols <- colnames(mat)[order(numeric_part)] # Order cols against numeric values
-  mat <- mat[, ordered_cols] # Apply ordered cols to matrix
+  # Load data and check against expected format
+  user_data <- load_user_data_dir(args$data)
+  check_data(user_data)
   
-  # Make heatmap object
-  plot <- Heatmap(mat,
-                  show_column_names = TRUE,
-                  col = col_rnorm, # Apply colors set above
-                  cluster_columns = FALSE, # Preserve column order
-                  row_title = "Organism",
-                  column_title = "Annotation",
-                  heatmap_legend_param = list(
-                    title = "Scaled abundance",
-                    legend_direction = "horizontal",
-                    legend_width = unit(6, "cm")))
-  
-  # Draw heatmap
-  plot <- draw(plot, heatmap_legend_side = "top")
+  # Make and save the plot
+  message("> Generating plot")
+  jpeg(args$output, height = 2160, width = 3840, res = 300)
+  if (args$clustering) {
+    make_clustered_heatmap(data = user_data)
+  } else {
+    make_heatmap(data = user_data)
+  }
 }
+
+if (!interactive()) {
+  # Can't be in same block after graphics device as issues with dev.off()
+  message(paste0("[OK] Saved plot to ", args$output))
+  message("> Done")
+}
+

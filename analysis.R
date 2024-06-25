@@ -22,13 +22,6 @@ if (interactive()) {
   # load_data(path = script_dir)
 }
 
-# Notes ------------------------------------------------------------------------
-
-# TODO Plot to analyze normalization
-# TODO Phylogram of the bacteria species for ordering the bar plot
-# TODO Plot to show change in abundance
-#     I think LFC using DESeq2 might be a good idea
-#     Volcano plot
 
 if (interactive()) {
 
@@ -51,16 +44,6 @@ if (interactive()) {
     make_compressed_stacked_barplot(all_samples, classification = "order")
   })
 
-  # Heatmap -------------------------------------------------------------------
-  # May not work until day, location, type exist in data etc.
-  try({
-    make_heatmap(all_samples, classification = "order")
-    make_univar_heatmap(all_samples, classification = "order")
-    make_multivar_heatmap(all_samples, classification = "order")
-  })
-
-  # PCoA -----------------------------------------------------------------------
-  # Evaluate beta-diversity
 
   
   user_data <- load_user_data_dir("/home/james/Documents/microbiome_analysis/data/input/luke/")
@@ -74,7 +57,13 @@ if (interactive()) {
   
   treemap <- make_treemap(user_data, max = 10)
   treemap
-
+  
+  heatmap <- make_heatmap(user_data)
+  heatmap
+  
+  clustered_heatmap <- make_clustered_heatmap(user_data)
+  clustered_heatmap
+  
   # Network --------------------------------------------------------------------
   # Identify clusters of linked abundances
 
@@ -98,12 +87,3 @@ if (interactive()) {
                       plot_method = "physeq")
 
 }
-
-
-# final_samples <- final_samples %>%a
-#   mutate(source = sub("\\.tsv$", "", source)) %>%
-#   separate(source, into = c("sample", "minimap_thresh", "samtools_score", "qiime_thresh", "kk_overlap", "kk_min_conf"), sep = "_")
-
-# write_tsv(final_samples, "~/Documents/microbiome_analysis/data/input/final_samples.tsv")
-
-
