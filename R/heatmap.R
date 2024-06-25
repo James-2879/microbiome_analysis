@@ -31,9 +31,7 @@ make_heatmap <- function(data) {
   summary_data <- data %>%
     group_by(source, species) %>%
     summarize(
-      mean_abundance = mean(abundance),
-      min_abundance = min(abundance),
-      max_abundance = max(abundance)
+      mean_abundance = mean(abundance)
     )
   
   plot <- summary_data %>% 
