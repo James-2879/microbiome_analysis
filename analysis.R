@@ -59,33 +59,6 @@ if (interactive()) {
     make_multivar_heatmap(all_samples, classification = "order")
   })
 
-  # Density --------------------------------------------------------------------
-  # Evaluate abundance density similarity across samples/repeats
-
-  library(plotly)
-
-  density_final_samples <- final_samples %>%
-    rename("scientific_name" = "species") %>%
-    rename("repeat" = "sample") %>%
-    unite("type", 5:9, sep = "_") %>%
-    mutate("day" = "default") %>%
-    mutate("location" = "default")
-
-  density_zymo <- zymo_standard %>%
-    rename("scientific_name" = "species") %>%
-    rename("repeat" = "sample") %>%
-    mutate("day" = "default") %>%
-    mutate("location" = "default") %>%
-    mutate('type' = "default")
-
-  density_both <- bind_rows(density_final_samples, density_zymo)
-
-  make_density_plot(data = density_both,
-                    limits = c(0, 0.001))
-
-  plotly <- ggplotly(plot)
-  plotly
-
   # PCoA -----------------------------------------------------------------------
   # Evaluate beta-diversity
 
@@ -95,19 +68,12 @@ if (interactive()) {
   
   pcoa <- do_pcoa(user_data, zero_missing = TRUE)
   pcoa
-
-
-  # Tree map -------------------------------------------------------------------
-  # Evaluate alpha-diversity
-
-  make_treemap(data = test_microbiome,
-               classification = "family",
-               max = 10)
-
-  make_dual_treemap(data = test_microbiome,
-                    classification1 = "order",
-                    classification2 = "family",
-                    max = 10)
+  
+  density <- make_density_plot(user_data)
+  density
+  
+  treemap <- make_treemap(user_data, max = 10)
+  treemap
 
   # Network --------------------------------------------------------------------
   # Identify clusters of linked abundances

@@ -1,56 +1,77 @@
-library(treemapify)
-library(viridis)
+suppressPackageStartupMessages({
+  library(treemapify)
+  library(viridis)
+})
 
-make_treemap <- function(data, classification, max) {
+parser <- ArgumentParser(description = "R microbiome analysis utility")
+parser$add_argument("-d", "--data",
+                    type = "character",
+                    default = NULL,
+                    help = "full path to directory containing .tsv files")
+parser$add_argument("-m", "--max",
+                    type = "character",
+                    default = "10",
+                    help = "max number of species to plot")
+parser$add_argument("-o", "--output",
+                    type = "character",
+                    default = NULL,
+                    help = "full path to save images to")
+args <- parser$parse_args()
+
+make_treemap <- function(data, max) {
+  #' Make a tree map to show most abundant species.
+  #' 
+  #' Samples are grouped (if applicable) to show top mean abundances.
+  #' 
+  #' @param data data frame
+  #' @param max integer (takes top n species)
+  #' @returns ggplot object (CLI will save plot as image)
   
   grouped_abundance <<- data %>% 
-    select(classification, abundance) %>% 
-    rename("organism" = classification) %>% 
-    group_by(organism) %>% 
+    select(species, abundance) %>% 
+    group_by(species) %>% 
     summarise("abundance" = sum(abundance)) %>% 
-    filter(!is.na(organism) & !is.na(abundance)) %>% 
+    filter(!is.na(species) & !is.na(abundance)) %>% 
+    arrange(desc(abundance)) %>% 
     slice_head(n = max)
   
   treemap <<- grouped_abundance %>% 
     ggplot(mapping = aes(area = abundance,
-                         fill = organism,
-                         label = organism)) +
+                         fill = species,
+                         label = species)) +
     geom_treemap() +
     geom_treemap_text(fontface = "italic", colour = "white", place = "centre",
                       grow = TRUE) +
     scale_fill_viridis(discrete = TRUE, option = "A")
   
   return(treemap)
-  
 }
 
-make_dual_treemap <- function(data, classification1, classification2, max) {
+if (!interactive()) {
   
-  grouped_abundance <<- data %>%
-    select(classification1, classification2, abundance) %>%
-    rename("parent" = classification1,
-           "child" = classification2) %>% 
-    group_by(parent, child) %>%
-    summarise("abundance" = sum(abundance)) %>%
-    arrange(desc(abundance)) %>%
-    ungroup() %>%
-    filter(!is.na(parent) & !is.na(child) & !is.na(abundance)) %>% 
-    slice_head(n = max)
+  # Load required functions
+  message("> Preparing session and data")
+  suppressPackageStartupMessages({
+    source("R/data.R")
+    source("R/themes.R")
+  })
+  message("[OK] Loaded packages")
+  message("[OK] Sourced tools")
   
-  treemap <- grouped_abundance %>%
-    ggplot(mapping = aes(area = abundance,
-                         fill = parent,
-                         label = child,
-                         subgroup = parent,
-                         border.col = "white",
-                         border.lw = 1)) +
-    geom_treemap() +
-    geom_treemap_subgroup_border(color = "white", size = 3) +
-    # geom_treemap_subgroup_text(place = "centre", grow = T, alpha = 1, colour =
-    #                              "white", fontface = "italic", min.size = 0) +
-    geom_treemap_text(colour = "white", place = "centre", reflow = T, alpha = 1,
-                      fontface = "italic") +
-    scale_fill_viridis(discrete = TRUE, option = "D")
+  # Load data and check against expected format
+  user_data <- load_user_data_dir(args$data)
+  check_data(user_data)
   
-  return(treemap)
+  # Make and save the plot
+  message("> Generating plot")
+  jpeg(args$output, height = 2160, width = 3840, res = 300)
+  make_treemap(data = user_data, max = args$max)
 }
+
+if (!interactive()) {
+  # Can't be in same block after graphics device as issues with dev.off()
+  message(paste0("[OK] Saved plot to ", args$output))
+  message("> Done")
+}
+
+
