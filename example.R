@@ -62,16 +62,6 @@ if (interactive()) {
   # Network --------------------------------------------------------------------
   # Identify clusters of linked abundances
 
-  network_final_samples <- final_samples %>%
-    rename("scientific_name" = "species") %>%
-    rename("repeat" = "sample") %>%
-    unite("type", 5:9, sep = "_") %>%
-    mutate("day" = "default") %>%
-    mutate("location" = "default") %>%
-    mutate(`repeat` = gsub("M", "", `repeat`)) %>%
-    rename("Taxa" = "taxonomy")
-
-
   physeq_object <- create_physeq_object(data = network_final_samples)
 
   create_network_phyloseq(physeq_object = physeq_object,
