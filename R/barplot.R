@@ -17,130 +17,164 @@ parser$add_argument("-o", "--output",
 parser$add_argument("-p", "--plot",
                     type = "character",
                     default = NULL,
-                    help = "barplot type; one of: standard, v-stacked, h-stacked")
-parser$add_argument("-l", "--level",
+                    help = "one of: standard, stacked")
+parser$add_argument("-a", "--arrangememnt",
                     type = "character",
                     default = NULL,
-                    help = "taxonomic level; probably one of genus or species")
+                    required = FALSE,
+                    help = "one of: vertical, horizontal (defaults to vertical)")
+parser$add_argument("-m", "--max",
+                    type = "integer",
+                    default = NULL,
+                    required = FALSE,
+                    help = "number of variables to plot (defaults to 10)")
 args <- parser$parse_args()
 
-make_barplot <- function(data, classification) {
-  # data should be long
+make_barplot <- function(data, orientation = "vertical", max = 30) {
+  #' Make a simple bar plot of species abundance.
+  #' 
+  #' Creates a bar plot of mean abundance grouped by species.
+  #' 
+  #' @param data data frame
+  #' @param orientation string (vertical/horizontal)
+  #' @param max integer (max number of entries to display (ordered by decreasing abundance),
+  #' any further entries are categorized into 'Other')
+  #' @returns ggplot object (CLI will save plot as image)
+  
   summary_data <- data %>%
-    mutate("repeat" = as.character(`repeat`)) %>% 
-    rename("organism" = all_of(classification)) %>% 
-    # filter(location == "OW") %>%
-    group_by(day, `repeat`, type, location, organism) %>%
+    group_by(species) %>%
     summarize(
       mean_abundance = mean(abundance),
       min_abundance = min(abundance),
       max_abundance = max(abundance)
     )
   
-  plot <- summary_data %>% 
-    ggplot(mapping = aes(x = day,
-                         y = mean_abundance,
-                         fill = `repeat`
-    )
-    ) +
+  if (max > 0) {
+    total_abundance <- summary_data %>%
+      group_by(species) %>%
+      summarize(total_abundance = sum(mean_abundance)) %>%
+      arrange(desc(total_abundance))
+    
+    # Get the top 10 species
+    top_species <- total_abundance %>%
+      slice(1:max) %>%
+      pull(species)
+    
+    # Reclassify other species as "Other"
+    summary_data <- summary_data %>%
+      mutate(species = if_else(species %in% top_species, species, "Other")) %>% 
+      mutate(min_abundance = if_else(species %in% top_species, min_abundance, NA)) %>% 
+      mutate(max_abundance = if_else(species %in% top_species, max_abundance, NA)) %>% 
+      group_by(species, min_abundance, max_abundance) %>% 
+      summarise(mean_abundance = sum(mean_abundance))
+  }
+  
+  if (orientation == "vertical") {
+    mapping <- summary_data %>% 
+      ggplot(mapping = aes(x = species,
+                           y = mean_abundance
+      )
+      )
+  } else if (orientation == "horizontal") {
+    mapping <- summary_data %>% 
+      ggplot(mapping = aes(x = mean_abundance,
+                           y = species
+      )
+      )
+  } else {
+    warning("[!!] Invalid orientation paramter, check docs")
+    stop()
+  }
+  
+  plot <- mapping + 
     geom_bar(stat = "identity", position = "dodge") +
-    geom_errorbar(aes(ymin = min_abundance, ymax = max_abundance),
-                  width = 0.2,
-                  position = position_dodge(width = 0.9)) +
-    facet_wrap("organism") +
     scale_fill_viridis(discrete = TRUE, option = "A") +
     theme_minimal() +
     custom_theme_blank
+  
+  if (orientation == "vertical") {
+    plot <- plot +
+      geom_errorbar(aes(ymin = min_abundance, ymax = max_abundance),
+                    width = 0.2,
+                    position = position_dodge(width = 0.9)) +
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+  } else if (orientation == "horizontal") {
+    plot <- plot + 
+      geom_errorbar(aes(xmin = min_abundance, xmax = max_abundance),
+                    width = 0.2,
+                    position = position_dodge(width = 0.9))
+  }
   return(plot)
   
 }
 
-make_stacked_barplot <- function(data, classification) {
-  # data should be long
+make_stacked_barplot <- function(data, orientation = "vertical", max = 10) {
+  #' Make a stacked bar plot of species abundance.
+  #' 
+  #' Creates a stacked bar plot of mean abundance of species for each source (as a 
+  #' fraction of total abundance per source).
+  #' 
+  #' @param data data frame
+  #' @param orientation string (vertical/horizontal)
+  #' @param max integer (max number of entries to display (ordered by decreasing abundance),
+  #' any further entries are categorized into 'Other')
+  #' @returns ggplot object (CLI will save plot as image)
+  
   summary_data <- data %>%
-    rename("organism" = all_of(classification)) %>% 
-    group_by(day, type, `repeat`, location, organism) %>%
+    group_by(species, source) %>%
     summarize(
-      mean_abundance = mean(abundance),
-      min_abundance = min(abundance),
-      max_abundance = max(abundance)
+      fractional_abundance = mean(abundance)
     )
   
-  plot <- summary_data %>% 
-    ggplot(mapping = aes(x = `repeat`,
-                         y = mean_abundance,
-                         fill = organism
-    )
-    ) +
-    geom_bar(stat = "identity", position = "fill") +
-    facet_wrap("location") +
-    scale_fill_viridis(discrete = TRUE, option = "A") +
-    theme_minimal() +
-    custom_theme_blank
-  return(plot)
+  if (max > 0) {
+    total_abundance <- summary_data %>%
+      group_by(species) %>%
+      summarize(total_abundance = sum(fractional_abundance)) %>%
+      arrange(desc(total_abundance))
+    
+    # Get the top 10 species
+    top_species <- total_abundance %>%
+      slice(1:max) %>%
+      pull(species)
+    
+    # Reclassify other species as "Other"
+    summary_data <- summary_data %>%
+      mutate(species = ifelse(species %in% top_species, species, "Other"))
+  }
   
-}
-
-make_horizontal_stacked_barplot <- function(data, classification) {
-  # data should be long
-  summary_data <- data %>%
-    rename("organism" = all_of(classification)) %>% 
-    mutate("repeat" = as.character(`repeat`)) %>% 
-    group_by(day, type, `repeat`, location, organism) %>%
-    summarize(
-      mean_abundance = mean(abundance),
-      min_abundance = min(abundance),
-      max_abundance = max(abundance)
-    )
+  if (orientation == "horizontal") {
+    mapping <- summary_data %>% 
+      ggplot(mapping = aes(x = fractional_abundance,
+                           y = source,
+                           fill = species
+      )
+      )
+  } else if (orientation == "vertical") {
+    mapping <- summary_data %>% 
+      ggplot(mapping = aes(x = source,
+                           y = fractional_abundance,
+                           fill = species
+      )
+      )
+  } else {
+    warning("[!!] Invalid orientation paramter, check docs")
+    stop()
+  }
   
-  plot <- summary_data %>% 
-    ggplot(mapping = aes(x = mean_abundance,
-                         y = `repeat`,
-                         fill = organism
-    )
-    ) +
-    geom_bar(stat = "identity", position = "fill") +
-    facet_grid(c("day", "type")) +
-    scale_fill_viridis(discrete = TRUE, option = "A") +
-    theme_minimal() +
-    custom_theme_blank
-  return(plot)
-  
-}
-
-make_compressed_stacked_barplot <- function(data, classification) {
-  # data should be long
-  summary_data <- data %>%
-    rename("organism" = all_of(classification)) %>% 
-    # filter(location == "OW") %>% 
-    # filter(type == "INF") %>% 
-    group_by(day, type, `repeat`, location, organism) %>%
-    summarize(
-      mean_abundance = mean(abundance),
-      min_abundance = min(abundance),
-      max_abundance = max(abundance)
-    ) %>% 
-    ungroup() %>%
-    arrange(day, location, type, ) %>%
-    unite("annotation", c(day, `repeat`, location, type), sep = "-")
-  
-  # Pull numbers from annotation to order by numerically
-  numeric_part <- as.numeric(gsub("[^0-9]", "", summary_data$annotation))
-  
-  # Reorder the factor levels based on the numeric part
-  summary_data$annotation <- fct_reorder(summary_data$annotation, numeric_part)
-  
-  plot <- summary_data %>% 
-    ggplot(mapping = aes(x = mean_abundance,
-                         y = annotation,
-                         fill = organism
-    )
-    ) +
+  plot <- mapping +
     geom_bar(stat = "identity", position = "fill") +
     scale_fill_viridis(discrete = TRUE, option = "A") +
     theme_minimal() +
-    custom_theme_blank
+    custom_theme_blank  
+  # theme(legend.position = "none") +
+  
+  if (orientation == "vertical") {
+    plot <- plot +
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+  }
+  
   return(plot)
+  
 }
 
 # CLI ----
@@ -159,28 +193,22 @@ if (!interactive()) {
   # Load data and check against expected format
   user_data <- load_user_data(args$data)
   check_data(user_data)
-  user_data <- tidy_data(user_data)
   
   # Make and save the plot
   message("> Generating plot")
   jpeg(args$output, height = 2160, width = 3840, res = 300)
   if (args$plot == "standard") {
-    # There is a warning message with the vector selection - look into this
     suppressMessages(
-      make_barplot(user_data, classification = args$level)
+      make_barplot(user_data, orientation = args$arrangememnt, max = args$max)
     )
-  } else if (args$plot == "v-stacked") {
+  } else if (args$plot == "stacked") {
     suppressMessages(
-      make_stacked_barplot(user_data, classification = args$level)
-    )
-  } else if (args$plot == "h-stacked") {
-    suppressMessages(
-      make_horizontal_stacked_barplot(user_data, classification = args$level)
+      make_stacked_barplot(user_data, orientation = args$arrangememnt, max = args$max)
     )
   } else {
-    message("[!!] Unknown plot type - check docs")
+    warning("[!!] Unknown plot type - check docs")
     message("> Exiting")
-    quit()
+    stop()
   }
 }
 

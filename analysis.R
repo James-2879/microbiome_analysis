@@ -33,18 +33,6 @@ if (interactive()) {
   final_samples_subset <- final_samples
   plot_updated_controls(samples = final_samples_subset)
   best <- analyse_processing_configs(samples = final_samples, best_method = FALSE)
-
-  # Barplot -------------------------------------------------------------------
-  # May not work until day, location, type exist in data etc.
-
-  try({
-    make_barplot(all_samples, classification = "order")
-    make_stacked_barplot(all_samples, classification = "order")
-    make_horizontal_stacked_barplot(all_samples, classification = "order")
-    make_compressed_stacked_barplot(all_samples, classification = "order")
-  })
-
-
   
   user_data <- load_user_data_dir("/home/james/Documents/microbiome_analysis/data/input/luke/")
   check_data(user_data)
@@ -63,6 +51,13 @@ if (interactive()) {
   
   clustered_heatmap <- make_clustered_heatmap(user_data)
   clustered_heatmap
+  
+  barplot_a <- make_barplot(user_data, max = 6, orientation = "horizontal")
+  barplot_a
+  
+  barplot_b <- make_stacked_barplot(user_data, orientation = "vertical", max = 10)
+  barplot_b
+
   
   # Network --------------------------------------------------------------------
   # Identify clusters of linked abundances
