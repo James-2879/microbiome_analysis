@@ -24,15 +24,13 @@ if (interactive()) {
 
 
 if (interactive()) {
-
-  # Controls -------------------------------------------------------------------
-  # Evaluate abundance assays against controls
-
-  plot_updated_controls(samples = final_samples_subset)
-  best <- analyse_processing_configs(samples = final_samples, best_method = FALSE)
   
   user_data <- load_user_data_dir("/home/james/Documents/microbiome_analysis/data/input/luke/")
   check_data(user_data)
+  
+  plot_controls(user_data)
+  best <- analyse_processing_configs(user_data, best_method = TRUE)
+  analyse_processing_configs(user_data, best_method = FALSE)
   
   pcoa <- do_pcoa(user_data, zero_missing = TRUE)
   pcoa
@@ -54,9 +52,10 @@ if (interactive()) {
   
   barplot_b <- make_stacked_barplot(user_data, orientation = "vertical", max = 10)
   barplot_b
+  
   physeq_object <- create_physeq_object(data = user_data)
 
-  create_network_phyloseq(physeq_object = physeq_object,
+  network <- create_network_phyloseq(physeq_object = physeq_object,
                  taxonomic_level = "species",
                  max_dist = 0.5)
 
