@@ -3,6 +3,7 @@ suppressPackageStartupMessages({
   library(tidyverse)
   library(viridis)
   library(scales)
+  library(pander)
 })
 
 parser <- ArgumentParser(description = "R microbiome analysis utility")
@@ -75,7 +76,7 @@ analyze_processing_configs <- function(data, best_method = FALSE) {
   #' @param best_method boolean (return only the best value (FALSE returns all))
   #' @returns the best (or all) processing configurations and distance from the standard
   
-  zymo_standard <- read_tsv("~/Documents/microbiome_analysis/data/input/zymo_standard.tsv") %>% 
+  zymo_standard <- suppressMessages(read_tsv("~/Documents/microbiome_analysis/data/input/zymo_standard.tsv")) %>% 
     select(-taxonomy) %>% 
     mutate(source = "zymo")
   
@@ -125,11 +126,12 @@ analyze_processing_configs <- function(data, best_method = FALSE) {
     best_method <- ranked_methods %>% 
       slice_min(order_by = total_difference) %>%
       pull(method)
-    print(best_method)
     return(best_method)
   } else {
-    print(ranked_methods)
-    return(ranked_methods)
+    ranked_methods <- ranked_methods %>% 
+      arrange(total_difference)
+    pander(ranked_methods, style = "simple")
+    # return(ranked_methods)
   }
 }
 
