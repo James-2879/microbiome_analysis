@@ -28,9 +28,6 @@ if (interactive()) {
   # Controls -------------------------------------------------------------------
   # Evaluate abundance assays against controls
 
-  final_samples <- read_tsv("~/Documents/microbiome_analysis/data/input/final_samples.tsv")
-
-  final_samples_subset <- final_samples
   plot_updated_controls(samples = final_samples_subset)
   best <- analyse_processing_configs(samples = final_samples, best_method = FALSE)
   
@@ -57,18 +54,10 @@ if (interactive()) {
   
   barplot_b <- make_stacked_barplot(user_data, orientation = "vertical", max = 10)
   barplot_b
-
-  
-  # Network --------------------------------------------------------------------
-  # Identify clusters of linked abundances
-
-  physeq_object <- create_physeq_object(data = network_final_samples)
+  physeq_object <- create_physeq_object(data = user_data)
 
   create_network_phyloseq(physeq_object = physeq_object,
-                 taxonomic_level = "scientific_name",
-                 max_dist = 1)
-
-  create_network_meco(physeq_object = physeq_object,
-                      plot_method = "physeq")
+                 taxonomic_level = "species",
+                 max_dist = 0.5)
 
 }

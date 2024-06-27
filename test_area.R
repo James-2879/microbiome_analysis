@@ -11,5 +11,3 @@ check_data(dir_data)
 
 library("roxygen2")
 roxygen2::roxygenise(package.dir = "/home/james/Documents/microbiome_analysis/")
-
-# TODO Networks
