@@ -40,12 +40,12 @@ load_user_data_dir <- function(path) {
     message(paste0("[OK] Found ", length(files), " files"))
     all_data <- imap_dfr(.x = files,
                         .f = function(file, i) {
-                          message(paste0("> Loading file ", i, " of ", length(files)), appendLF = F)
+                          cat(paste0("> Loading file ", i, " of ", length(files), "\r"))
                           tsv <- suppressMessages(read_tsv(paste0(path, file))) %>% 
                             mutate(source = file)
                         }) %>% 
       mutate(entry_id = row_number())
-    message("[OK] Loaded data")
+    message("\n[OK] Loaded data")
   }, error = function(error) {
     message("[!!] Unable to read tsv(s), see error below...")
     message(error)

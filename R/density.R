@@ -1,8 +1,13 @@
 suppressPackageStartupMessages({
+  library(argparse)
   library(tidyverse)
 })
 
 parser <- ArgumentParser(description = "R microbiome analysis utility")
+parser$add_argument("-w", "--utility_directory",
+                    type = "character",
+                    default = NULL,
+                    help = "full path to location of utility directory")
 parser$add_argument("-d", "--data",
                     type = "character",
                     default = NULL,
@@ -38,6 +43,8 @@ make_density_plot <- function(data) {
 
 if (!interactive()) {
   
+  setwd(toString(args$utility_directory))
+  
   # Load required functions
   message("> Preparing session and data")
   suppressPackageStartupMessages({
@@ -53,12 +60,12 @@ if (!interactive()) {
   
   # Make and save the plot
   message("> Generating plot")
-  jpeg(args$output, height = 2160, width = 3840, res = 300)
+  jpeg(paste0(args$output, "density.jpeg"), height = 2160, width = 3840, res = 300)
   make_density_plot(data = user_data)
 }
 
 if (!interactive()) {
   # Can't be in same block after graphics device as issues with dev.off()
   message(paste0("[OK] Saved plot to ", args$output))
-  message("> Done")
+  message("[COMPLETE]")
 }

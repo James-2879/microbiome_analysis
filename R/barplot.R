@@ -6,6 +6,10 @@ suppressPackageStartupMessages({
 })
 
 parser <- ArgumentParser(description = "R microbiome analysis utility")
+parser$add_argument("-w", "--utility_directory",
+                    type = "character",
+                    default = NULL,
+                    help = "full path to location of utility directory")
 parser$add_argument("-d", "--data",
                     type = "character",
                     default = NULL,
@@ -18,7 +22,7 @@ parser$add_argument("-p", "--plot",
                     type = "character",
                     default = NULL,
                     help = "one of: standard, stacked")
-parser$add_argument("-a", "--arrangememnt",
+parser$add_argument("-a", "--arrangement",
                     type = "character",
                     default = NULL,
                     required = FALSE,
@@ -181,6 +185,8 @@ make_stacked_barplot <- function(data, orientation = "vertical", max = 10) {
 
 if (!interactive()) {
   
+  setwd(toString(args$utility_directory))
+  
   # Load required functions
   message("> Preparing session and data")
   suppressPackageStartupMessages({
@@ -191,19 +197,19 @@ if (!interactive()) {
   message("[OK] Sourced tools")
   
   # Load data and check against expected format
-  user_data <- load_user_data(args$data)
+  user_data <- load_user_data_dir(args$data)
   check_data(user_data)
   
   # Make and save the plot
   message("> Generating plot")
-  jpeg(args$output, height = 2160, width = 3840, res = 300)
+  jpeg(paste0(args$output, "barplot.jpeg"), height = 2160, width = 3840, res = 300)
   if (args$plot == "standard") {
     suppressMessages(
-      make_barplot(user_data, orientation = args$arrangememnt, max = args$max)
+      make_barplot(user_data, orientation = args$arrangement, max = args$max)
     )
   } else if (args$plot == "stacked") {
     suppressMessages(
-      make_stacked_barplot(user_data, orientation = args$arrangememnt, max = args$max)
+      make_stacked_barplot(user_data, orientation = args$arrangement, max = args$max)
     )
   } else {
     warning("[!!] Unknown plot type - check docs")
@@ -215,5 +221,5 @@ if (!interactive()) {
 if (!interactive()) {
   # Can't be in same block after graphics device as issues with dev.off()
   message(paste0("[OK] Saved plot to ", args$output))
-  message("> Done")
+  message("[COMPLETE]")
 }

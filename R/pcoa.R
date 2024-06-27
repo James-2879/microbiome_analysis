@@ -6,12 +6,16 @@ suppressPackageStartupMessages({
 })
 
 parser <- ArgumentParser(description = "R microbiome analysis utility")
+parser$add_argument("-w", "--utility_directory",
+                    type = "character",
+                    default = NULL,
+                    help = "full path to location of utility directory")
 parser$add_argument("-d", "--data",
                     type = "character",
                     default = NULL,
                     help = "full path to directory containing .tsv files")
 parser$add_argument("-z", "--zero",
-                    type = "character",
+                    action = "store_true",
                     default = NULL,
                     help = "replace NA values with zeros")
 parser$add_argument("-o", "--output",
@@ -60,7 +64,7 @@ do_pcoa <- function(data, zero_missing = TRUE) {
     mutate("sample_id" = paste0("sample_", seq(1, dim(pcoa_data)[1]))) %>% 
     mutate("sample_id_copy" = sample_id) %>% 
     column_to_rownames(var = "sample_id") %>% 
-    rename("sample_id_copy" = "sample_id") %>% 
+    rename("sample_id" = "sample_id_copy") %>% 
     select(sample_id, everything())
   
   # Calculate distances using Bray-Curtis method
@@ -72,8 +76,8 @@ do_pcoa <- function(data, zero_missing = TRUE) {
   # Rename PCoA columns
   pcoa_df <<- as.data.frame(pcoa_result) %>% 
     rownames_to_column(var = "sample_id") %>% 
-    rename("V1" = "PCoA1",
-           "V2" = "PCoA2") %>% 
+    rename("PCoA1" = "V1",
+           "PCoA2" = "V2") %>% 
     left_join(pcoa_data[, 1:2], by = "sample_id")
   
   # Plot the scaled distances
@@ -95,6 +99,8 @@ do_pcoa <- function(data, zero_missing = TRUE) {
 
 if (!interactive()) {
   
+  setwd(toString(args$utility_directory))
+  
   # Load required functions
   message("> Preparing session and data")
   suppressPackageStartupMessages({
@@ -110,14 +116,14 @@ if (!interactive()) {
   
   # Make and save the plot
   message("> Generating plot")
-  jpeg(args$output, height = 2160, width = 3840, res = 300)
+  jpeg(paste0(args$output, "pcoa.jpeg"), height = 2160, width = 3840, res = 300)
     do_pcoa(data = user_data, zero_missing = args$zero)
 }
 
 if (!interactive()) {
   # Can't be in same block after graphics device as issues with dev.off()
   message(paste0("[OK] Saved plot to ", args$output))
-  message("> Done")
+  message("[COMPLETE]")
 }
 
 

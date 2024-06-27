@@ -1,15 +1,20 @@
 suppressPackageStartupMessages({
+  library(argparse)
   library(treemapify)
   library(viridis)
 })
 
 parser <- ArgumentParser(description = "R microbiome analysis utility")
+parser$add_argument("-w", "--utility_directory",
+                    type = "character",
+                    default = NULL,
+                    help = "full path to location of utility directory")
 parser$add_argument("-d", "--data",
                     type = "character",
                     default = NULL,
                     help = "full path to directory containing .tsv files")
 parser$add_argument("-m", "--max",
-                    type = "character",
+                    type = "integer",
                     default = "10",
                     help = "max number of species to plot")
 parser$add_argument("-o", "--output",
@@ -27,7 +32,7 @@ make_treemap <- function(data, max) {
   #' @param max integer (takes top n species)
   #' @returns ggplot object (CLI will save plot as image)
   
-  grouped_abundance <<- data %>% 
+  grouped_abundance <- data %>% 
     select(species, abundance) %>% 
     group_by(species) %>% 
     summarise("abundance" = sum(abundance)) %>% 
@@ -35,7 +40,7 @@ make_treemap <- function(data, max) {
     arrange(desc(abundance)) %>% 
     slice_head(n = max)
   
-  treemap <<- grouped_abundance %>% 
+  treemap <- grouped_abundance %>% 
     ggplot(mapping = aes(area = abundance,
                          fill = species,
                          label = species)) +
@@ -48,6 +53,8 @@ make_treemap <- function(data, max) {
 }
 
 if (!interactive()) {
+  
+  setwd(toString(args$utility_directory))
   
   # Load required functions
   message("> Preparing session and data")
@@ -64,14 +71,14 @@ if (!interactive()) {
   
   # Make and save the plot
   message("> Generating plot")
-  jpeg(args$output, height = 2160, width = 3840, res = 300)
+  jpeg(paste0(args$output, "treemap.jpeg"), height = 2160, width = 3840, res = 300)
   make_treemap(data = user_data, max = args$max)
 }
 
 if (!interactive()) {
   # Can't be in same block after graphics device as issues with dev.off()
   message(paste0("[OK] Saved plot to ", args$output))
-  message("> Done")
+  message("[COMPLETE]")
 }
 
 

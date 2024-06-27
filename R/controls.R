@@ -1,10 +1,15 @@
 suppressPackageStartupMessages({
+  library(argparse)
   library(tidyverse)
   library(viridis)
   library(scales)
 })
 
 parser <- ArgumentParser(description = "R microbiome analysis utility")
+parser$add_argument("-w", "--utility_directory",
+                    type = "character",
+                    default = NULL,
+                    help = "full path to location of utility directory")
 parser$add_argument("-d", "--data",
                     type = "character",
                     default = NULL,
@@ -25,7 +30,7 @@ plot_controls <- function(data) {
   #' @param data data frame
   #' @return ggplot object (CLI will save plot as image)
   
-  zymo_standard <- read_tsv("~/Documents/microbiome_analysis/data/input/zymo_standard.tsv") %>% 
+  zymo_standard <- suppressMessages(read_tsv("~/Documents/microbiome_analysis/data/input/zymo_standard.tsv")) %>% 
     select(-taxonomy) %>% 
     mutate(source = "zymo")
   
@@ -132,6 +137,8 @@ analyze_processing_configs <- function(data, best_method = FALSE) {
 
 if (!interactive()) {
   
+  setwd(toString(args$utility_directory))
+  
   # Load required functions
   message("> Preparing session and data")
   suppressPackageStartupMessages({
@@ -150,15 +157,15 @@ if (!interactive()) {
   } else {
     # Make and save the plot
     message("> Generating plot")
-    jpeg(args$output, height = 2160, width = 3840, res = 300)
+    jpeg(paste0(args$output, "controls.jpeg"), height = 2160, width = 3840, res = 300)
     plot_controls(user_data)
   }
 }
 
 if (!interactive()) {
   # Can't be in same block after graphics device as issues with dev.off()
-  if (args$analyze) {
+  if (!args$analyze) {
     message(paste0("[OK] Saved plot to ", args$output))
   }
-  message("> Done")
+  message("[COMPLETE]")
 }

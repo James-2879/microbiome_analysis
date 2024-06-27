@@ -1,3 +1,4 @@
 /data
 .RData
 .Rhistory
+/inst/scripts/test.sh

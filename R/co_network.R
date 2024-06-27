@@ -1,4 +1,5 @@
 suppressPackageStartupMessages({
+  library(argparse)
   library(phyloseq)
   library(microeco)
   library(file2meco)
@@ -6,6 +7,10 @@ suppressPackageStartupMessages({
 })
 
 parser <- ArgumentParser(description = "R microbiome analysis utility")
+parser$add_argument("-w", "--utility_directory",
+                    type = "character",
+                    default = NULL,
+                    help = "full path to location of utility directory")
 parser$add_argument("-d", "--data",
                     type = "character",
                     default = NULL,
@@ -15,7 +20,7 @@ parser$add_argument("-m", "--method",
                     default = "bray",
                     help = "distance method to use (defaults to bray)")
 parser$add_argument("-k", "--max_distance",
-                    type = "integer",
+                    type = "double",
                     default = 0.5,
                     help = "max distance between vertices (defaults to 0.5)")
 parser$add_argument("-o", "--output",
@@ -98,6 +103,8 @@ create_network_phyloseq <- function(physeq_object, max_dist = 0.5, distance_meth
 
 if (!interactive()) {
   
+  setwd(toString(args$utility_directory))
+  
   # Load required functions
   message("> Preparing session and data")
   suppressPackageStartupMessages({
@@ -115,12 +122,12 @@ if (!interactive()) {
   
   # Make and save the plot
   message("> Generating plot")
-  jpeg(args$output, height = 2160, width = 3840, res = 300)
-  create_network_phyloseq(physeq_object, max_dist = args$max_distance, distance_method = args$method)
+  jpeg(paste0(args$output, "network.jpeg"), height = 2160, width = 3840, res = 300)
+  create_network_phyloseq(physeq_obj, max_dist = args$max_distance, distance_method = args$method)
 }
 
 if (!interactive()) {
   # Can't be in same block after graphics device as issues with dev.off()
   message(paste0("[OK] Saved plot to ", args$output))
-  message("> Done")
+  message("[COMPLETE]")
 }
