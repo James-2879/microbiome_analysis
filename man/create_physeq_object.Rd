@@ -15,3 +15,8 @@ Phyloseq object
 \description{
 Required to plot networks.
 }
+\details{
+How this object is created depends on how networks are created later on.
+ It is important to arrange the input data frame in the same way to ensure
+ that networks are both reproducible and comparable.
+}

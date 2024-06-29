@@ -73,9 +73,9 @@ load_user_data_dir <- function(path) {
                          }
                          data
                        }) %>% 
-    mutate(entry_id = row_number()) %>%
-    mutate(abundance = if_else(source == "luke_copy", abundance + runif(1, 100, 10000), abundance)) %>% 
-    mutate(abundance = if_else(source == "luke_copy2", abundance + runif(1, 100, 10000), abundance))
+    mutate(entry_id = row_number()) #%>%
+    # mutate(abundance = if_else(source == "luke_copy", abundance + runif(1, 100, 10000), abundance)) %>% 
+    # mutate(abundance = if_else(source == "luke_copy2", abundance + runif(1, 100, 10000), abundance))
   
   return(all_directories)
   
