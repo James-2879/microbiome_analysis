@@ -14,6 +14,7 @@ parser$add_argument("-w", "--utility_directory",
 parser$add_argument("-d", "--data",
                     type = "character",
                     default = NULL,
+                    nargs = "+",
                     help = "full path to directory containing .tsv files")
 parser$add_argument("-a", "--analyze",
                     action = "store_true",

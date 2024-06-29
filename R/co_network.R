@@ -13,6 +13,7 @@ parser$add_argument("-w", "--utility_directory",
                     help = "full path to location of utility directory")
 parser$add_argument("-d", "--data",
                     type = "character",
+                    nargs = "+",
                     default = NULL,
                     help = "full path to directory containing .tsv files")
 parser$add_argument("-m", "--method",
