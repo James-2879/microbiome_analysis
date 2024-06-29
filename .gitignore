@@ -3,3 +3,4 @@
 .Rhistory
 .Rbuildignore
 /inst/scripts/test.sh
+/inst/scripts/test_multiple.sh

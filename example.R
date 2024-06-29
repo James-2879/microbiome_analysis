@@ -25,7 +25,9 @@ if (interactive()) {
 
 if (interactive()) {
   
-  user_data <- load_user_data_dir("/home/james/Documents/microbiome_analysis/data/input/luke/")
+  # user_data <- load_user_data_dir("/home/james/Documents/microbiome_analysis/data/input/luke/")
+  user_data <- load_user_data_dir(c("/home/james/Documents/microbiome_analysis/data/input/luke/",
+                                    "/home/james/Documents/microbiome_analysis/data/input/luke_copy/"))
   check_data(user_data)
   
   plot_controls(user_data)

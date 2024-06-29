@@ -10,7 +10,7 @@ load_user_data <- function(path) {
   #'
   #' @param path path to single file as string
   #' @return a data frame with five columns (input columns plus 'entry_id' and 'source')
-
+  
   tryCatch({
     user_data <- suppressMessages(read_tsv(path)) %>% 
       mutate(source = basename(path)) %>% 
@@ -20,9 +20,29 @@ load_user_data <- function(path) {
     message("[!!] Unable to read tsv, see error below...")
     message(error)
     message("[**] Aborting - check input")
-    quit()
+    stop()
   })
   return(user_data)
+}
+
+process_directory <- function(directory) {
+  tryCatch({
+    files <- list.files(directory)
+    message(paste0("[OK] Found ", length(files), " files"))
+    all_data <- imap_dfr(.x = files,
+                         .f = function(file, i) {
+                           cat(paste0("[>>] Loading file ", i, " of ", length(files), "\r"))
+                           tsv <- suppressMessages(read_tsv(paste0(directory, file))) %>% 
+                             mutate(source = file)
+                         })
+    message("\n[OK] Loaded data")
+  }, error = function(error) {
+    message("[!!] Unable to read tsv(s), see error below...")
+    message(error)
+    message("[**] Aborting - check input")
+    stop()
+  })
+  return(all_data)
 }
 
 load_user_data_dir <- function(path) {
@@ -35,24 +55,28 @@ load_user_data_dir <- function(path) {
   #' @param path path to a directory as string
   #' @return a data frame with five columns (input columns plus 'entry_id' and 'source')
   
-  tryCatch({
-    files <- list.files(path)
-    message(paste0("[OK] Found ", length(files), " files"))
-    all_data <- imap_dfr(.x = files,
-                        .f = function(file, i) {
-                          cat(paste0("> Loading file ", i, " of ", length(files), "\r"))
-                          tsv <- suppressMessages(read_tsv(paste0(path, file))) %>% 
-                            mutate(source = file)
-                        }) %>% 
-      mutate(entry_id = row_number())
-    message("\n[OK] Loaded data")
-  }, error = function(error) {
-    message("[!!] Unable to read tsv(s), see error below...")
-    message(error)
-    message("[**] Aborting - check input")
-    quit()
-  })
-  return(all_data)
+  # for (directory in args$data) {
+  #   if (dir.exists(directory)) {
+  #     process_directory(directory)
+  #     }
+  #   }
+  
+  directories <- path
+  
+  all_directories <- imap_dfr(.x = directories,
+                       .f = function(directory, i) {
+                         message(paste0("[>>] Loading directory ", i, " of ", length(directories)))
+                         data <- process_directory(directory)
+                         if (length(directories) > 1) {
+                           data <- data %>% 
+                             mutate(source = basename(directory))
+                         }
+                         data
+                       }) %>% 
+    mutate(entry_id = row_number())
+  
+  return(all_directories)
+  
 }
 
 # Check loaded data is in correct format
@@ -71,6 +95,6 @@ check_data <- function(data) {
     missing_cols <- expected_cols[!expected_cols %in% tolower(colnames(data))]
     message(paste0("     Missing: ", missing_cols))
     message("[**] Aborting - check input")
-    quit()
+    stop()
   }
 }

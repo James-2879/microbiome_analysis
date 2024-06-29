@@ -107,7 +107,7 @@ if (!interactive()) {
   setwd(toString(args$utility_directory))
   
   # Load required functions
-  message("> Preparing session and data")
+  message("[>>] Preparing session and data")
   suppressPackageStartupMessages({
     source("R/data.R")
   })
@@ -122,7 +122,7 @@ if (!interactive()) {
   message("[OK] Created Phyloseq object")
   
   # Make and save the plot
-  message("> Generating plot")
+  message("[>>] Generating plot")
   jpeg(paste0(args$output, "network.jpeg"), height = 2160, width = 3840, res = 300)
   create_network_phyloseq(physeq_obj, max_dist = args$max_distance, distance_method = args$method)
 }

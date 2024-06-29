@@ -100,7 +100,7 @@ if (!interactive()) {
   setwd(toString(args$utility_directory))
   
   # Load required functions
-  message("> Preparing session and data")
+  message("[>>] Preparing session and data")
   suppressPackageStartupMessages({
     source("R/data.R")
     source("R/themes.R")
@@ -113,7 +113,7 @@ if (!interactive()) {
   check_data(user_data)
   
   # Make and save the plot
-  message("> Generating plot")
+  message("[>>] Generating plot")
   jpeg(paste0(args$output, "heatmap.jpeg"), height = 2160, width = 3840, res = 300)
   if (args$clustering) {
     make_clustered_heatmap(data = user_data)

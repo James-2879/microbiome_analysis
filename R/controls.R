@@ -143,7 +143,7 @@ if (!interactive()) {
   setwd(toString(args$utility_directory))
   
   # Load required functions
-  message("> Preparing session and data")
+  message("[>>] Preparing session and data")
   suppressPackageStartupMessages({
     source("R/data.R")
     source("R/themes.R")
@@ -159,7 +159,7 @@ if (!interactive()) {
     analyze_processing_configs(user_data, best_method = FALSE)
   } else {
     # Make and save the plot
-    message("> Generating plot")
+    message("[>>] Generating plot")
     jpeg(paste0(args$output, "controls.jpeg"), height = 2160, width = 3840, res = 300)
     plot_controls(user_data)
   }
