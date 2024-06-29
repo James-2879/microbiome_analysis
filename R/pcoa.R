@@ -44,7 +44,7 @@ do_pcoa <- function(data, zero_missing = TRUE) {
   pcoa_data <- data %>% 
     select(c(species, abundance, source)) %>% 
     group_by(source, species) %>%
-    suppressMessages(summarise(abundance = mean(abundance, na.rm = TRUE))) %>%
+    summarise(abundance = mean(abundance, na.rm = TRUE)) %>%
     filter(!is.na(abundance)) %>%
     pivot_wider(names_from = species, values_from = abundance)
   if (zero_missing) {
@@ -69,13 +69,13 @@ do_pcoa <- function(data, zero_missing = TRUE) {
     select(sample_id, everything())
   
   # Calculate distances using Bray-Curtis method
-  ab.dist <- vegdist(pcoa_data[, 3:ncol(pcoa_data)], method="bray", diag=FALSE, upper=FALSE)
+  ab.dist<<- vegdist(pcoa_data[, 3:ncol(pcoa_data)], method="bray", diag=FALSE, upper=FALSE)
   
   # Perform multidimensional scaling
-  pcoa_result <<- cmdscale(ab.dist, k = 2)
+  pcoa_result <- cmdscale(ab.dist, k = 2)
   
   # Rename PCoA columns
-  pcoa_df <<- as.data.frame(pcoa_result) %>% 
+  pcoa_df <- as.data.frame(pcoa_result) %>% 
     rownames_to_column(var = "sample_id") %>% 
     rename("PCoA1" = "V1",
            "PCoA2" = "V2") %>% 

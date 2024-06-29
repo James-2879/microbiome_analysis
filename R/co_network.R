@@ -34,14 +34,21 @@ create_physeq_object <- function(data) {
   #' Create a Phyloseq object from data set.
   #' 
   #' Required to plot networks.
+  #' 
+  #' How this object is created depends on how networks are created later on.
+  #'  It is important to arrange the input data frame in the same way to ensure
+  #'  that networks are both reproducible and comparable.
   #'
   #' @param data data frame
   #' @returns Phyloseq object
   
   # Clean input data containing multiple samples (more samples is better)
   cleaned_df <- data %>% 
-    select(-c(entry_id, taxonomy)) %>% 
-    pivot_wider(names_from = `source`, values_from = abundance)
+    select(c(species, abundance, source)) %>% 
+    group_by(source, species) %>%
+    summarise(abundance = mean(abundance, na.rm = TRUE)) %>%
+    pivot_wider(names_from = `source`, values_from = abundance) %>%
+    arrange(across(2:ncol(.), desc))
   
   # Make arbitrary sample IDs
   sample_ids <- seq(1, dim(cleaned_df)[1])

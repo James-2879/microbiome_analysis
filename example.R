@@ -25,9 +25,13 @@ if (interactive()) {
 
 if (interactive()) {
   
-  # user_data <- load_user_data_dir("/home/james/Documents/microbiome_analysis/data/input/luke/")
-  user_data <- load_user_data_dir(c("/home/james/Documents/microbiome_analysis/data/input/luke/",
-                                    "/home/james/Documents/microbiome_analysis/data/input/luke_copy/"))
+  user_data <- load_user_data_dir("/home/james/Documents/microbiome_analysis/data/input/luke/")
+  # user_data <- load_user_data_dir(c("/home/james/Documents/microbiome_analysis/data/input/luke/",
+  #                                   "/home/james/Documents/microbiome_analysis/data/input/luke_copy/",
+  #                                   "/home/james/Documents/microbiome_analysis/data/input/luke_copy2/")) %>%
+  #   mutate(abundance = if_else(source == "luke_copy", abundance + runif(1, 100, 10000), abundance)) %>% 
+  #   mutate(abundance = if_else(source == "luke_copy2", abundance + runif(1, 100, 10000), abundance))
+  
   check_data(user_data)
   
   plot_controls(user_data)
@@ -58,7 +62,8 @@ if (interactive()) {
   physeq_object <- create_physeq_object(data = user_data)
 
   network <- create_network_phyloseq(physeq_object = physeq_object,
-                 taxonomic_level = "species",
+                 distance_method = "bray",
                  max_dist = 0.5)
-
+  network
+  
 }
