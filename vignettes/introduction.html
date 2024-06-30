@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="University of Bath" />
+
+<meta name="date" content="2024-06-30" />
+
+<title>Introduction</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction</h1>
+<h4 class="author">University of Bath</h4>
+<h4 class="date">2024-06-30</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#setup" id="toc-setup">Setup</a></li>
+<li><a href="#basic-usage" id="toc-basic-usage">Basic usage</a>
+<ul>
+<li><a href="#command-line-interface" id="toc-command-line-interface">Command line interface</a></li>
+<li><a href="#interactive-r-session" id="toc-interactive-r-session">Interactive R session</a></li>
+</ul></li>
+<li><a href="#function-examples" id="toc-function-examples">Function
+examples</a></li>
+<li><a href="#interoperatibility" id="toc-interoperatibility">Interoperatibility</a>
+<ul>
+<li><a href="#docker" id="toc-docker">Docker</a></li>
+<li><a href="#python" id="toc-python">Python</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<p>This utility has a number of R dependencies which need to installed
+(found in the <code>renv.lock</code> file), although the setup process
+is automated.</p>
+<p>From the command line:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="ex">R</span> <span class="at">-e</span> <span class="st">&quot;install.packages(&#39;renv&#39;)&quot;</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="ex">R</span> <span class="at">-e</span> <span class="st">&quot;renv::restore(&#39;/home/</span><span class="va">$USER</span><span class="st">/Documents/microbiome_analysis/&#39;)&quot;</span></span></code></pre></div>
+<p>From an R session:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;renv&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">restore</span>(<span class="st">&quot;/home/$USER/Documents/microbiome_analysis/&quot;</span>)</span></code></pre></div>
+<p>Packages such as <code>tidyverse</code> often have many system
+dependencies which occassionally require manual installation, however
+this is out of scope of this vignette. Such package install error
+messages tend to be informative anyway, so it’s a fairly simple
+process.</p>
+</div>
+<div id="basic-usage" class="section level2">
+<h2>Basic usage</h2>
+<p>Tools in this repository may either be run from the command line, or
+from within R itself, although usage is a little different.</p>
+<div id="command-line-interface" class="section level3">
+<h3>Command line interface</h3>
+<p>This aims to be as simple as possible, with each tool able to run
+with a single shell command.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Example construction</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="ex">Rscript</span> /home/user/path/to/script.R <span class="at">--argument1</span> value <span class="at">--argument2</span> value</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co"># Example in shell script</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="ex">Rscript</span> /home/<span class="va">$USER</span>/Documents/microbiome_analysis/R/pcoa.R <span class="at">-w</span> /home/<span class="va">$USER</span>/Documents/microbiome_analysis/R/pcoa.R <span class="at">--data</span> /home/<span class="va">$USER</span>/Documents/data/ <span class="at">--output</span> /home/<span class="va">$USER</span>/Downloads/</span></code></pre></div>
+<p>Typical arguments include a path to the utility, a data path, and an
+output path. When running from a shell script it may be desirable to set
+these paths as variables.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="va">utility_path</span><span class="op">=</span><span class="st">&quot;/home/</span><span class="va">$USER</span><span class="st">/Documents/microbiome_analysis/&quot;</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="va">data_path</span><span class="op">=</span><span class="st">&quot;/home/</span><span class="va">$USER</span><span class="st">/Documents/data/&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="va">output_path</span><span class="op">=</span><span class="st">&quot;/home/</span><span class="va">$USER</span><span class="st">/Downloads/&quot;</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="ex">Rscript</span> <span class="st">&quot;</span><span class="va">$utility_path</span><span class="st">/R/pcoa.R&quot;</span> <span class="at">-w</span> <span class="va">$utility_path</span> <span class="at">--data</span> <span class="va">$data_path</span> <span class="at">--output</span> <span class="va">$output_path</span></span></code></pre></div>
+<p>Information on available arguments can be found using the
+<code>--help</code> flag.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">Rscript</span> /home/<span class="va">$USER</span>/Documents/microbiome_analysis/R/pcoa.R <span class="at">--help</span></span></code></pre></div>
+<p>The <code>--data</code> flag allows for either a single directory
+containing <code>tsv</code> files to be specified, or multiple
+directories, separated by spaces.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="va">data_path</span><span class="op">=</span><span class="st">&quot;/home/</span><span class="va">$USER</span><span class="st">/Documents/microbiome_analysis/data/a/ /home/</span><span class="va">$USER</span><span class="st">/Documents/microbiome_analysis/data/b/ /home/</span><span class="va">$USER</span><span class="st">/Documents/microbiome_analysis/data/c/&quot;</span></span></code></pre></div>
+</div>
+<div id="interactive-r-session" class="section level3">
+<h3>Interactive R session</h3>
+<p>First, set the path of the tools directory.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>script_dir <span class="ot">&lt;-</span> <span class="st">&quot;/home/james/Documents/microbiome_analysis/&quot;</span></span></code></pre></div>
+<p>When working from within R, it is assumed that data needs to be
+loaded for the duration of the session. Therefore, when individual
+plotting functions are called interactively, <em>cleaned</em> data must
+be passed as an argument. This aims to reduce complexity of functions
+and minimize dependencies.</p>
+<p>This is pretty simple, though.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">paste0</span>(script_dir, <span class="st">&quot;R/data.R&quot;</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>user_data <span class="ot">&lt;-</span> <span class="fu">load_user_data_dir</span>(<span class="st">&quot;/home/user/path/to/data/&quot;</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="fu">check_data</span>(user_data)</span></code></pre></div>
+<p>Calling <code>check_data</code> is not necessary, but ensures that
+further functions receive data in an expected format.</p>
+<p>Two functions are available for loading data, allow a single file, an
+entire directory, or multiple directories to be loaded at once.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># Single file</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>user_data <span class="ot">&lt;-</span> <span class="fu">load_user_data</span>(<span class="st">&quot;/home/user/path/to/data/file.tsv&quot;</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co"># Single directory</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>user_data <span class="ot">&lt;-</span> <span class="fu">load_user_data_dir</span>(<span class="st">&quot;/home/user/path/to/data/&quot;</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co"># Multiple directories</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>user_data <span class="ot">&lt;-</span> <span class="fu">load_user_data_dir</span>(<span class="fu">c</span>(<span class="st">&quot;/home/user/path/to/data/a/&quot;</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>                                  <span class="st">&quot;/home/user/path/to/data/b/&quot;</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>                                  <span class="st">&quot;/home/user/path/to/data/c/&quot;</span>)</span></code></pre></div>
+<p>This data can then be passed to plotting functions.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>pcoa <span class="ot">&lt;-</span> <span class="fu">do_pcoa</span>(user_data, <span class="at">zero_missing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>pcoa</span></code></pre></div>
+<p>Documentation for each function can be found using the console.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>?load_user_data_dir</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>?do_pcoa</span></code></pre></div>
+</div>
+</div>
+<div id="function-examples" class="section level2">
+<h2>Function examples</h2>
+<p>Available examples.</p>
+</div>
+<div id="interoperatibility" class="section level2">
+<h2>Interoperatibility</h2>
+<div id="docker" class="section level3">
+<h3>Docker</h3>
+<p>You may want to run this in Docker, either in its own container, or
+as part of a more extensive workflow. Set up takes a little longer, but
+generally allows for easier dependency management and interoperatibility
+in the future.</p>
+<p>Detailed instructions are out of scope for this document, but some
+basic commands for getting started are listed below (these can also be
+found in <code>inst/scripts/</code>).</p>
+<p>An example <code>Dockerfile</code> can be found in the parent
+directory of this repository.</p>
+<div id="building-an-image" class="section level4">
+<h4>Building an image</h4>
+<div class="sourceCode" id="cb12"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># Stop container if running</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">sudo</span> docker container stop microbiome-analysis</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co"># Remove old container if present</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="fu">sudo</span> docker container rm microbiome-analysis-container</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co"># Remove old image if present</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="fu">sudo</span> docker image rm microbiome-analysis</span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="co"># Build image</span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="va">DOCKER_BUILDKIT</span><span class="op">=</span>1 <span class="fu">sudo</span> docker build <span class="at">-t</span> microbiome-analysis .</span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co"># Launch container</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="fu">sudo</span> docker run <span class="at">-d</span> <span class="at">--name</span> microbiome-analysis-container microbiome-analysis</span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="co"># Use container interactively</span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> microbiome-analysis-container /bin/bash</span></code></pre></div>
+</div>
+<div id="running-inside-a-container" class="section level4">
+<h4>Running inside a container</h4>
+<div class="sourceCode" id="cb13"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># Copying data into a container</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="ex">docker</span> cp /home/<span class="va">$USER</span>/Documents/data.tsv microbiome-analysis-container:/usr/local/bin/data.tsv</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co"># Running commands in a Docker container</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="ex">docker</span> exec microbiome-analysis-container Rscript /usr/local/bin/microbiome_analysis/pcoa.R <span class="at">--arguments</span> ...</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co"># Copying from container to local environment</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="ex">docker</span> cp microbiome-analysis-container:/usr/local/bin/output.jpeg ~/Downloads/</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co"># Running a container interactively</span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> microbiome-analysis-container /bin/bash</span></code></pre></div>
+</div>
+</div>
+<div id="python" class="section level3">
+<h3>Python</h3>
+<p>It is technically possible to run these tools from within Python.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Use the <code>reticulate</code> package to import the R functions
+into the Python environment (best)</li>
+<li>Use <code>subprocess.call()</code> to execute shell commands</li>
+<li>Use <code>os.system()</code> to execute shell commands</li>
+</ol>
+<p>Executing shell commands from Python to do this is generally not the
+most ideal solution, particularly as the <code>reticulate</code> module
+in Python is suitably comprehensive for this use case.</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
