@@ -4,7 +4,7 @@ Collection of tools to visualize microbiological abundance data in R.
 
 ## Getting Started
 
-The only setup required is to install dependencies from the `renv.lock` file. Instructions for how to do this can be found in the [vignette](vignettes/vignette.md).
+The only setup required is to install dependencies from the `renv.lock` file. Instructions for how to do this can be found in the [vignette](vignettes/introduction.md).
 
 Functions included in this project can be accessed either inside an R session, or via the command line.
 
