@@ -40,6 +40,11 @@ do_pcoa <- function(data, zero_missing = TRUE) {
   #' @param zero_missing TRUE/FALSE
   #' @returns list which can be called to display the plot (CLI will save plot as image)
   
+  # Check how many groups exist
+  if (length(unique(data$source)) < 3) {
+    message("[!!] Note that PCoA may not run with less than three different groups.")
+  }
+  
   # Summarise data set
   pcoa_data <- data %>% 
     select(c(species, abundance, source)) %>% 
