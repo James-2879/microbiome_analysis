@@ -14,4 +14,4 @@ Functions included in this project can be accessed either inside an R session, o
 
 ## Documentation
 
-[Vignette](vignettes/vignette.md) - Detailed guide on using this project.
+[Vignette](vignettes/introduction.md) - Detailed guide on using this project.
