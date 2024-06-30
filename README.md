@@ -1,32 +1,17 @@
 # Microbiome Analysis
 
-Collection of tools to visualize microbiological abundance data.
+Collection of tools to visualize microbiological abundance data in R.
 
-## Local setup
+## Getting Started
 
-1. Clone repo and `cd`
-2. Run `local_setup.sh` to install necessary dependencies
+The only setup required is to install dependencies from the `renv.lock` file. Instructions for how to do this can be found in the [vignette](vignettes/vignette.md).
 
-### Running interactively
+Functions included in this project can be accessed either inside and R session, or via the command line.
 
-Use any of the tools from within `analysis.R` - this sets up the environment and source tools etc. Change `script_dir` at the top of the file.
+> [!TIP]
+> Run `Rscript /path/to/project/R/script_name.R --help` from the command line for available arguments for each script.
+> Enter `?function_name` the R session console for documentation on each of the available functions.
 
-> [!NOTE]
-> `analysis.R` is primarily just a set of example functions.
+## Documentation
 
-### Running from CLI
-
-1. `cd` to `microbiome_analysis` directory
-2. Run commands like `Rscript file.R --help`
-
-**Example**
-
-```
-Rscript pcoa.R --data path/to/data.tsv --output path/to/file.extension
-```
-
-## Running inside Docker
-
-1. `cd` to `microbiome_analysis` directory
-2. Run `docker_testing.sh` to build image and start container
-3. Use `run_in_docker.sh` as a guide for copying files into and executing commands within the container
+[Vignette](vignettes/vignette.md) - Detailed guide on using this project.
