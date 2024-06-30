@@ -56,9 +56,9 @@ files to be specified, or multiple directories, separated by spaces.
 
 ### Interactive R session
 
-First, set the path of the tools directory.
+First, set the path of the package directory.
 
-    script_dir <- "/home/james/Documents/microbiome_analysis/"
+    script_dir <- "/home/user/Documents/microbiome_analysis/"
 
 When working from within R, it is assumed that data needs to be loaded
 for the duration of the session. Therefore, when individual plotting
