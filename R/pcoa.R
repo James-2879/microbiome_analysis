@@ -40,11 +40,6 @@ do_pcoa <- function(data, zero_missing = TRUE) {
   #' @param zero_missing TRUE/FALSE
   #' @returns list which can be called to display the plot (CLI will save plot as image)
   
-  # Check how many groups exist
-  if (length(unique(data$source)) < 3) {
-    message("[!!] Note that PCoA may not run with less than three different groups.")
-  }
-  
   # Summarise data set
   pcoa_data <- data %>% 
     select(c(species, abundance, source)) %>% 
@@ -74,10 +69,21 @@ do_pcoa <- function(data, zero_missing = TRUE) {
     select(sample_id, everything())
   
   # Calculate distances using Bray-Curtis method
-  ab.dist<<- vegdist(pcoa_data[, 3:ncol(pcoa_data)], method="bray", diag=FALSE, upper=FALSE)
+  ab.dist <- vegdist(pcoa_data[, 3:ncol(pcoa_data)], method="bray", diag=FALSE, upper=FALSE)
   
-  # Perform multidimensional scaling
-  pcoa_result <- cmdscale(ab.dist, k = 2)
+  tryCatch({
+    # Perform multidimensional scaling
+    pcoa_result <- cmdscale(ab.dist, k = 2)
+  }, warning = function(w) {
+    # Handle errors
+    if (length(unique(data$source)) < 3) {
+      message("[!!] PCoA couldn't run, this is likely due to too few groups. Data should have at least three groups.")
+    } else {
+      message("[!!] PCoA couldn't run, this is likely due to data points being too similar.")
+    }
+    message("Full error: ", conditionMessage(w))
+    stop()
+  })
   
   # Rename PCoA columns
   pcoa_df <- as.data.frame(pcoa_result) %>% 
@@ -123,7 +129,7 @@ if (!interactive()) {
   # Make and save the plot
   message("[>>] Generating plot")
   jpeg(paste0(args$output, "pcoa.jpeg"), height = 2160, width = 3840, res = 300)
-    do_pcoa(data = user_data, zero_missing = args$zero)
+  do_pcoa(data = user_data, zero_missing = args$zero)
 }
 
 if (!interactive()) {
