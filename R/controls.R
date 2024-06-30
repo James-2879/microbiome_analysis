@@ -32,7 +32,7 @@ plot_controls <- function(data) {
   #' @param data data frame
   #' @return ggplot object (CLI will save plot as image)
   
-  zymo_standard <- suppressMessages(read_tsv("~/Documents/microbiome_analysis/data/input/zymo_standard.tsv")) %>% 
+  zymo_standard <- suppressMessages(read_tsv("~/Documents/microbiome_analysis/inst/extdata/zymo_standard.tsv")) %>% 
     select(-taxonomy) %>% 
     mutate(source = "zymo")
   
@@ -77,7 +77,7 @@ analyze_processing_configs <- function(data, best_method = FALSE) {
   #' @param best_method boolean (return only the best value (FALSE returns all))
   #' @returns the best (or all) processing configurations and distance from the standard
   
-  zymo_standard <- suppressMessages(read_tsv("~/Documents/microbiome_analysis/data/input/zymo_standard.tsv")) %>% 
+  zymo_standard <- suppressMessages(read_tsv("~/Documents/microbiome_analysis/inst/extdata/zymo_standard.tsv")) %>% 
     select(-taxonomy) %>% 
     mutate(source = "zymo")
   
