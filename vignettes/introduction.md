@@ -12,7 +12,7 @@ From the command line:
 From an R session:
 
     install.packages("renv")
-    renv::restore("/home/$USER/Documents/microbiome_analysis/")
+    renv::restore("/home/user/Documents/microbiome_analysis/")
 
 Packages such as `tidyverse` often have many system dependencies which
 occassionally require manual installation, however this is out of scope
@@ -30,7 +30,7 @@ This aims to be as simple as possible, with each tool able to run with a
 single shell command.
 
     # Example construction
-    Rscript /home/user/path/to/script.R --argument1 value --argument2 value
+    Rscript /home/$USER/path/to/script.R --argument1 value --argument2 value
 
     # Example in shell script
     Rscript /home/$USER/Documents/microbiome_analysis/R/pcoa.R -w /home/$USER/Documents/microbiome_analysis/R/pcoa.R --data /home/$USER/Documents/data/ --output /home/$USER/Downloads/
@@ -58,7 +58,7 @@ files to be specified, or multiple directories, separated by spaces.
 
 First, set the path of the package directory.
 
-    script_dir <- "/home/user/Documents/microbiome_analysis/"
+    package_dir <- "/home/user/Documents/microbiome_analysis/"
 
 When working from within R, it is assumed that data needs to be loaded
 for the duration of the session. Therefore, when individual plotting
@@ -68,7 +68,7 @@ dependencies.
 
 This is pretty simple, though.
 
-    source(paste0(script_dir, "R/data.R"))
+    source(file.path(package_dir, "R", "data.R"))
 
     user_data <- load_user_data_dir("/home/user/path/to/data/")
     check_data(user_data)
