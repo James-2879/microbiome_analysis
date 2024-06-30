@@ -1,29 +1,30 @@
 if (interactive()) {
-  script_dir <- "/home/james/Documents/microbiome_analysis/"
-  setwd(script_dir)
-}
-
-source("R/data.R")
-source("R/themes.R")
-source("R/controls.R")
-source("R/treemap.R")
-source("R/density.R")
-source("R/barplot.R")
-source("R/pcoa.R")
-source("R/heatmap.R")
-source("R/co_network.R")
-source('R/updated_controls.R')
-
-library(tidyverse)
-
-
-# Don't execute if running from command line
-if (interactive()) {
-  # load_data(path = script_dir)
-}
-
-
-if (interactive()) {
+  
+  library(tidyverse)
+  
+  # Construct directory ----
+  
+  home_dir <- Sys.getenv("HOME")
+  script_dir <- file.path(home_dir, "Documents", "microbiome_analysis")
+  
+  # Source required scripts ----
+  
+  source(file.path(script_dir, "R", "data.R"))
+  source(file.path(script_dir, "R", "themes.R"))
+  source(file.path(script_dir, "R", "controls.R"))
+  source(file.path(script_dir, "R", "treemap.R"))
+  source(file.path(script_dir, "R", "density.R"))
+  source(file.path(script_dir, "R", "barplot.R"))
+  source(file.path(script_dir, "R", "pcoa.R"))
+  source(file.path(script_dir, "R", "heatmap.R"))
+  source(file.path(script_dir, "R", "co_network.R"))
+  
+  
+  
+  
+  library("roxygen2")
+  roxygen2::roxygenise(package.dir = "/home/james/Documents/microbiome_analysis/")
+  
   
   user_data <- load_user_data_dir("/home/james/Documents/microbiome_analysis/data/input/luke/")
   # user_data <- load_user_data_dir(c("/home/james/Documents/microbiome_analysis/data/input/luke/",
@@ -60,10 +61,10 @@ if (interactive()) {
   barplot_b
   
   physeq_object <- create_physeq_object(data = user_data)
-
+  
   network <- create_network_phyloseq(physeq_object = physeq_object,
-                 distance_method = "bray",
-                 max_dist = 0.5)
+                                     distance_method = "bray",
+                                     max_dist = 0.5)
   network
   
 }
