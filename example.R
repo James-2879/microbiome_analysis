@@ -32,11 +32,11 @@ if (interactive()) {
   # Single directory example
   user_data <- load_user_data_dir(file.path(package_dir, "data", "input", "a/"))
   # Multi directory example (randomly mutates data for variation)
-  # user_data <- load_user_data_dir(c(file.path(package_dir, "data", "input", "a/"),
-  #                                   file.path(package_dir, "data", "input", "b/"),
-  #                                   file.path(package_dir, "data", "input", "c/"))) %>%
-  #   mutate(abundance = if_else(source == "b", abundance + runif(1, 100, 10000), abundance)) %>%
-  #   mutate(abundance = if_else(source == "c", abundance + runif(1, 100, 10000), abundance))
+  user_data <- load_user_data_dir(c(file.path(package_dir, "data", "input", "a/"),
+                                    file.path(package_dir, "data", "input", "b/"),
+                                    file.path(package_dir, "data", "input", "c/"))) %>%
+    mutate(abundance = if_else(source == "b", abundance + runif(1, 100, 10000), abundance)) %>%
+    mutate(abundance = if_else(source == "c", abundance + runif(1, 100, 10000), abundance))
   # Check loaded data
   check_data(user_data)
   

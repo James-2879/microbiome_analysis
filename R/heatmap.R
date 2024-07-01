@@ -117,7 +117,7 @@ if (!interactive()) {
   
   # Make and save the plot
   message("[>>] Generating plot")
-  jpeg(paste0(args$output, "heatmap.jpeg"), height = 2160, width = 3840, res = 300)
+  jpeg(paste0(args$output, "heatmap.jpeg"), height = 3000, width = 4500, res = 300)
   if (args$clustering) {
     make_clustered_heatmap(data = user_data)
   } else {

@@ -28,20 +28,26 @@ make_density_plot <- function(data) {
   #'  @param data data frame
   #'  @returns ggplot object (CLI will save plot as image)
   
-  density_plot <- data %>% 
+  plot <- data %>% 
     ggplot(mapping = aes(x = abundance,
                          color = source)) +
-    geom_density() +
+    geom_density(alpha = 0.5) +
     theme_minimal() +
     list(theme(panel.grid.major.x = element_blank(),
                panel.grid.minor.x = element_blank(),
                panel.grid.minor.y = element_blank(),
                panel.grid.major.y = element_blank())) +
+    theme(legend.position = "none") +
     labs(title = "Distribution of Microbial Abundance Levels across Samples",
          x = "Abundance",
          y = "Density")
   
-  return(density_plot)
+  if (length(unique(data$source)) < 11) {
+    plot <- plot +
+      theme(legend.position = "bottom")
+  }
+  
+  return(plot)
 }
 
 if (!interactive()) {
@@ -63,7 +69,7 @@ if (!interactive()) {
   
   # Make and save the plot
   message("[>>] Generating plot")
-  jpeg(paste0(args$output, "density.jpeg"), height = 2160, width = 3840, res = 300)
+  jpeg(paste0(args$output, "density.jpeg"), height = 3000, width = 4500, res = 300)
   make_density_plot(data = user_data)
 }
 

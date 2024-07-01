@@ -215,7 +215,7 @@ if (!interactive()) {
   
   # Make and save the plot
   message("[>>] Generating plot")
-  jpeg(paste0(args$output, "barplot.jpeg"), height = 2160, width = 3840, res = 300)
+  jpeg(paste0(args$output, "barplot.jpeg"), height = 3000, width = 4500, res = 300)
   if (args$plot == "standard") {
     suppressMessages(
       make_barplot(user_data, orientation = args$arrangement, max = args$max)

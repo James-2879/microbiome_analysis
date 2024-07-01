@@ -93,7 +93,7 @@ do_pcoa <- function(data, zero_missing = TRUE) {
     left_join(pcoa_data[, 1:2], by = "sample_id")
   
   # Plot the scaled distances
-  pcoa_plot <- ggplot(pcoa_df,
+  plot <- ggplot(pcoa_df,
                       mapping = aes(x = PCoA1,
                                     y = PCoA2,
                                     color = `source`
@@ -102,10 +102,17 @@ do_pcoa <- function(data, zero_missing = TRUE) {
     theme(panel.grid.major = element_blank()) +
     theme(panel.grid.minor = element_blank()) +
     theme(panel.background = element_blank()) +
+    theme(legend.position = "none") +
     labs(title = "Principal Coordinates Analysis of Microbial Community Structure")
-  pcoa_plot
   
-  return(pcoa_plot)
+  if (length(unique(data$source)) < 11) {
+    plot <- plot +
+      theme(legend.position = "bottom")
+  }
+  
+  plot
+  
+  return(plot)
 }
 
 # https://journals.asm.org/doi/10.1128/msystems.00166-16
@@ -129,7 +136,7 @@ if (!interactive()) {
   
   # Make and save the plot
   message("[>>] Generating plot")
-  jpeg(paste0(args$output, "pcoa.jpeg"), height = 2160, width = 3840, res = 300)
+  jpeg(paste0(args$output, "pcoa.jpeg"), height = 3000, width = 4500, res = 300)
   do_pcoa(data = user_data, zero_missing = args$zero)
 }
 

@@ -137,7 +137,7 @@ if (!interactive()) {
   
   # Make and save the plot
   message("[>>] Generating plot")
-  jpeg(paste0(args$output, "network.jpeg"), height = 2160, width = 3840, res = 300)
+  jpeg(paste0(args$output, "network.jpeg"), height = 3000, width = 4500, res = 300)
   create_network_phyloseq(physeq_obj, max_dist = args$max_distance, distance_method = args$method)
 }
 
