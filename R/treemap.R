@@ -48,7 +48,8 @@ make_treemap <- function(data, max) {
     geom_treemap() +
     geom_treemap_text(fontface = "italic", colour = "white", place = "centre",
                       grow = TRUE) +
-    scale_fill_viridis(discrete = TRUE, option = "A")
+    scale_fill_viridis(discrete = TRUE, option = "A") + 
+    labs(title = "Proportional Community Composition of the Most Abundant Microbial Species")
   
   return(treemap)
 }

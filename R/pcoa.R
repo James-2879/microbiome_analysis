@@ -101,7 +101,8 @@ do_pcoa <- function(data, zero_missing = TRUE) {
     geom_point() +
     theme(panel.grid.major = element_blank()) +
     theme(panel.grid.minor = element_blank()) +
-    theme(panel.background = element_blank())
+    theme(panel.background = element_blank()) +
+    labs(title = "Principal Coordinates Analysis of Microbial Community Structure")
   pcoa_plot
   
   return(pcoa_plot)

@@ -95,19 +95,24 @@ make_barplot <- function(data, orientation = "vertical", max = 30) {
     geom_bar(stat = "identity", position = "dodge") +
     scale_fill_viridis(discrete = TRUE, option = "A") +
     theme_minimal() +
-    custom_theme_blank
+    custom_theme_blank +
+    labs(title = "Microbial Species Abundance Averaged (mean) Across all Samples")
   
   if (orientation == "vertical") {
     plot <- plot +
       geom_errorbar(aes(ymin = min_abundance, ymax = max_abundance),
                     width = 0.2,
                     position = position_dodge(width = 0.9)) +
-      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+      labs(x = "Species",
+           y = "Mean Abundance")
   } else if (orientation == "horizontal") {
     plot <- plot + 
       geom_errorbar(aes(xmin = min_abundance, xmax = max_abundance),
                     width = 0.2,
-                    position = position_dodge(width = 0.9))
+                    position = position_dodge(width = 0.9)) +
+      labs(x = "Mean Abundance",
+           y = "Species")
   }
   return(plot)
   
@@ -170,12 +175,19 @@ make_stacked_barplot <- function(data, orientation = "vertical", max = 10) {
     geom_bar(stat = "identity", position = "fill") +
     scale_fill_viridis(discrete = TRUE, option = "A") +
     theme_minimal() +
-    custom_theme_blank  
+    custom_theme_blank +
+    labs(title = "Relative Abundance of Microbial Species Across Samples")
   # theme(legend.position = "none") +
   
   if (orientation == "vertical") {
     plot <- plot +
-      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+      labs(x = "Sample",
+           y = "Relative Abundance")
+  } else if (orientation == "horizontal") {
+    plot <- plot +
+      labs(x = "Relative Abundance",
+           y = "Sample")
   }
   
   return(plot)

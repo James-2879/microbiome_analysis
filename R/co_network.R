@@ -103,7 +103,14 @@ create_network_phyloseq <- function(physeq_object, max_dist = 0.5, distance_meth
                       maxdist = max_dist,
                       point_label = "species",
                       type = "taxa"
-  )
+  ) +
+    labs(title = "Interactions Between Species in Microbial Community",
+         caption = str_wrap("This network plot visualizes the interactions between different microbial species within a community. 
+                            Each node represents a unique species, and the edges (lines) between them indicate the presence of a co-occurrence relationship. 
+                            The thickness of the edges reflects the strength of these interactions, with thicker lines indicating closer or more significant associations. 
+                            Spatial distribution of the nodes highlights the clustering of species that frequently interact with each other, while isolated nodes suggest species with fewer or weaker connections within the community.",
+                            width = 160)
+    )
   
   return(network)
 }

@@ -37,7 +37,9 @@ make_density_plot <- function(data) {
                panel.grid.minor.x = element_blank(),
                panel.grid.minor.y = element_blank(),
                panel.grid.major.y = element_blank())) +
-    labs(title = "Abundance density across samples")
+    labs(title = "Distribution of Microbial Abundance Levels across Samples",
+         x = "Abundance",
+         y = "Density")
   
   return(density_plot)
 }

@@ -48,7 +48,10 @@ make_heatmap <- function(data) {
     ) +
     geom_tile() +
     theme_minimal() +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+    labs(title = "Heatmap Representation of Microbial Abundance Levels across Different Samples",
+         x = "Sample",
+         y = "Species")
   return(plot)
 }
 
@@ -83,11 +86,11 @@ make_clustered_heatmap <- function(data) {
   # Create heatmap object
   plot <- Heatmap(mat,
                   show_column_names = TRUE,
-                  row_title = "Organism",
+                  row_title = "Species",
                   col = col_rnorm, # Apply colors set above
-                  column_title = "Source",
+                  column_title = "Sample",
                   heatmap_legend_param = list(
-                    title = "Scaled abundance",
+                    title = "Heatmap Representation of Microbial Abundance Levels across Different Samples",
                     legend_direction = "horizontal",
                     legend_width = unit(6, "cm")))
   

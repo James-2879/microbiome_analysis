@@ -32,11 +32,11 @@ if (interactive()) {
   # Single directory example
   user_data <- load_user_data_dir(file.path(package_dir, "data", "input", "a/"))
   # Multi directory example (randomly mutates data for variation)
-  user_data <- load_user_data_dir(c(file.path(package_dir, "data", "input", "a/"),
-                                    file.path(package_dir, "data", "input", "b/"),
-                                    file.path(package_dir, "data", "input", "c/"))) %>%
-    mutate(abundance = if_else(source == "b", abundance + runif(1, 100, 10000), abundance)) %>%
-    mutate(abundance = if_else(source == "c", abundance + runif(1, 100, 10000), abundance))
+  # user_data <- load_user_data_dir(c(file.path(package_dir, "data", "input", "a/"),
+  #                                   file.path(package_dir, "data", "input", "b/"),
+  #                                   file.path(package_dir, "data", "input", "c/"))) %>%
+  #   mutate(abundance = if_else(source == "b", abundance + runif(1, 100, 10000), abundance)) %>%
+  #   mutate(abundance = if_else(source == "c", abundance + runif(1, 100, 10000), abundance))
   # Check loaded data
   check_data(user_data)
   
@@ -44,34 +44,26 @@ if (interactive()) {
   
   ## Controls ----
   plot_controls(user_data)
-  best <- analyze_processing_configs(user_data, best_method = TRUE)
-  analyze_processing_configs(user_data, best_method = FALSE)
+  analyze_processing_configs(user_data, best_method = TRUE)
   
   ## PCoA ----
-  pcoa <- do_pcoa(user_data, zero_missing = TRUE)
-  pcoa
+  do_pcoa(user_data, zero_missing = TRUE)
   
   ## Density ----
-  density <- make_density_plot(user_data)
-  density
+  make_density_plot(user_data)
   
   ## Tree map ----
-  treemap <- make_treemap(user_data, max = 10)
-  treemap
+  make_treemap(user_data, max = 10)
   
   ## Heat maps ----
-  heatmap <- make_heatmap(user_data)
-  heatmap
+  make_heatmap(user_data)
   
-  clustered_heatmap <- make_clustered_heatmap(user_data)
-  clustered_heatmap
+  make_clustered_heatmap(user_data)
   
   ## Bar plots ----
-  barplot_a <- make_barplot(user_data, max = 6, orientation = "horizontal")
-  barplot_a
+  make_barplot(user_data, max = 6, orientation = "horizontal")
   
-  barplot_b <- make_stacked_barplot(user_data, orientation = "vertical", max = 10)
-  barplot_b
+  make_stacked_barplot(user_data, orientation = "vertical", max = 10)
   
   ## Network ----
   physeq_object <- create_physeq_object(data = user_data)
