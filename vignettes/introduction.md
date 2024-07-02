@@ -300,7 +300,8 @@ samples are present, a legend will not be shown.
 Two different heat maps are available: a simpler heat map with a cleaner
 design, as well as a heat map showing both species and sample
 clustering. Note plot resolutions are compressed for this vignette so
-text may overlap.
+text may overlap. Also note that this analysis may not be possible to
+compute if differences between samples are incredibly low.
 
     make_heatmap(user_data)
 
@@ -333,7 +334,8 @@ differences between samples). Note that if more than 10 samples are
 present, a legend will not be shown. `zero_missing` replaces any missing
 values with zeros e.g. if one sample has data for a species that other
 samples do not. Setting this option to `FALSE` may limit the
-effectiveness of this analysis.
+effectiveness of this analysis. Also note that this analysis may not be
+possible to compute if differences between samples are incredibly low.
 
     do_pcoa(user_data_multi, zero_missing = TRUE)
 

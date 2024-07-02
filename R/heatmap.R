@@ -94,7 +94,8 @@ make_clustered_heatmap <- function(data) {
                     legend_direction = "horizontal",
                     legend_width = unit(6, "cm")))
   
-  plot <- draw(plot, heatmap_legend_side = "top")
+  plot <- draw(plot, heatmap_legend_side = "top",
+               padding = unit(c(2, 2, 2, 2), "cm"))
   return(plot)
 }
 
@@ -117,7 +118,7 @@ if (!interactive() && !knitr::is_html_output()) {
   
   # Make and save the plot
   message("[>>] Generating plot")
-  jpeg(paste0(args$output, "heatmap.jpeg"), height = 3000, width = 4500, res = 300)
+  jpeg(paste0(args$output, "heatmap.jpeg"), height = 4500, width = 6000, res = 300)
   if (args$clustering) {
     make_clustered_heatmap(data = user_data)
   } else {

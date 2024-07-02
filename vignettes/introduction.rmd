@@ -192,7 +192,7 @@ make_density_plot(user_data_multi)
 
 ### Heat maps
 
-Two different heat maps are available: a simpler heat map with a cleaner design, as well as a heat map showing both species and sample clustering. Note plot resolutions are compressed for this vignette so text may overlap.
+Two different heat maps are available: a simpler heat map with a cleaner design, as well as a heat map showing both species and sample clustering. Note plot resolutions are compressed for this vignette so text may overlap. Also note that this analysis may not be possible to compute if differences between samples are incredibly low.
 
 ```{r, message=FALSE, fig.width=15, fig.height=10, dpi=46}
 make_heatmap(user_data)
@@ -213,7 +213,7 @@ create_network_phyloseq(physeq_object = physeq_object,
 
 ### PCoA
 
-Creates a PCoA plot to visualize beta-diversity (community composition differences between samples). Note that if more than 10 samples are present, a legend will not be shown. `zero_missing` replaces any missing values with zeros e.g. if one sample has data for a species that other samples do not. Setting this option to `FALSE` may limit the effectiveness of this analysis.
+Creates a PCoA plot to visualize beta-diversity (community composition differences between samples). Note that if more than 10 samples are present, a legend will not be shown. `zero_missing` replaces any missing values with zeros e.g. if one sample has data for a species that other samples do not. Setting this option to `FALSE` may limit the effectiveness of this analysis. Also note that this analysis may not be possible to compute if differences between samples are incredibly low.
 
 ```{r, message=FALSE, fig.width=9, fig.height=6, dpi=75}
 do_pcoa(user_data_multi, zero_missing = TRUE)
