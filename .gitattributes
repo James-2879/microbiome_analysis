@@ -1,0 +1,3 @@
+# Or, ignore all HTML files in a specific directory
+vignettes/*.html linguist-vendored
+
