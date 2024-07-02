@@ -116,7 +116,7 @@ create_network_phyloseq <- function(physeq_object, max_dist = 0.5, distance_meth
 }
 
 
-if (!interactive()) {
+if (!interactive() && !knitr::is_html_output()) {
   
   setwd(toString(args$utility_directory))
   

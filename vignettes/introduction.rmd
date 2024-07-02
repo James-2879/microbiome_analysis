@@ -1,0 +1,287 @@
+---
+title: "Microbiome Analysis"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+A suite of tools for exploratory visualization of abundance data from amplicon sequencing.
+
+James Swift, University of Bath, 2024.
+
+## Setup
+
+This utility has a number of R dependencies which need to installed (found in the `renv.lock` file), although the setup process is automated.
+
+From the command line:
+
+```{sh, eval=FALSE}
+R -e "install.packages('renv')"
+R -e "renv::restore('/home/$USER/Documents/microbiome_analysis/')"
+```
+
+From an R session:
+
+```{r, eval=FALSE}
+install.packages("renv")
+renv::restore("/home/$USER/Documents/microbiome_analysis/")
+```
+
+Packages such as `tidyverse` often have many system dependencies which occassionally require manual installation, however this is out of scope of this vignette. Such package install error messages tend to be informative anyway, so it's a fairly simple process.
+
+## Basic usage
+
+Tools in this repository may either be run from the command line, or from within R itself, although usage is a little different.
+
+### Command line interface
+
+This aims to be as simple as possible, with each tool able to run with a single shell command.
+
+```{sh, eval=FALSE}
+# Example construction
+Rscript /home/user/path/to/script.R --argument1 value --argument2 value
+
+# Example in shell script
+Rscript /home/$USER/Documents/microbiome_analysis/R/pcoa.R -w /home/$USER/Documents/microbiome_analysis/R/pcoa.R --data /home/$USER/Documents/data/ --output /home/$USER/Downloads/
+```
+
+Typical arguments include a path to the utility, a data path, and an output path. When running from a shell script it may be desirable to set these paths as variables.
+
+```{sh, eval=FALSE}
+utility_path="/home/$USER/Documents/microbiome_analysis/"
+data_path="/home/$USER/Documents/data/"
+output_path="/home/$USER/Downloads/"
+
+Rscript "$utility_path/R/pcoa.R" -w $utility_path --data $data_path --output $output_path
+```
+
+Information on available arguments can be found using the `--help` flag.
+
+```{sh, eval=FALSE}
+Rscript /home/$USER/Documents/microbiome_analysis/R/pcoa.R --help
+```
+
+The `--data` flag allows for either a single directory containing `tsv` files to be specified, or multiple directories, separated by spaces.
+
+```{sh, eval=FALSE}
+data_path="/home/$USER/Documents/microbiome_analysis/data/a/ /home/$USER/Documents/microbiome_analysis/data/b/ /home/$USER/Documents/microbiome_analysis/data/c/"
+```
+
+
+### Interactive R session
+
+First, set the path of the tools directory.
+
+```{r, eval=FALSE}
+script_dir <- "/home/james/Documents/microbiome_analysis/"
+```
+
+When working from within R, it is assumed that data needs to be loaded for the duration of the session. Therefore, when individual plotting functions are called interactively, _cleaned_ data must be passed as an argument. This aims to reduce complexity of functions and minimize dependencies.
+
+This is pretty simple, though.
+
+```{r, eval=FALSE}
+source(paste0(script_dir, "R/data.R"))
+
+user_data <- load_user_data_dir("/home/user/path/to/data/")
+check_data(user_data)
+```
+
+Calling `check_data` is not necessary, but ensures that further functions receive data in an expected format.
+
+Two functions are available for loading data, allow a single file, an entire directory, or multiple directories to be loaded at once.
+
+```{r, eval=FALSE}
+# Single file
+user_data <- load_user_data("/home/user/path/to/data/file.tsv")
+
+# Single directory
+user_data <- load_user_data_dir("/home/user/path/to/data/")
+
+# Multiple directories
+user_data <- load_user_data_dir(c("/home/user/path/to/data/a/",
+                                  "/home/user/path/to/data/b/",
+                                  "/home/user/path/to/data/c/")
+
+```
+
+This data can then be passed to plotting functions.
+
+```{r, eval=FALSE}
+pcoa <- do_pcoa(user_data, zero_missing = TRUE)
+pcoa
+```
+
+Documentation for each function can be found using the console.
+
+```{r, eval=FALSE}
+?load_user_data_dir
+?do_pcoa
+```
+
+## Function examples
+
+```{r, echo=FALSE, message=FALSE, results='hide'}
+# This is just preamble for actually creating plots for the vignette.
+  
+  library(tidyverse)
+  
+  home_dir <- Sys.getenv("HOME")
+  package_dir <- file.path(home_dir, "Documents", "microbiome_analysis")
+  
+  source(file.path(package_dir, "R", "data.R"))
+  source(file.path(package_dir, "R", "themes.R"))
+  source(file.path(package_dir, "R", "controls.R"))
+  source(file.path(package_dir, "R", "treemap.R"))
+  source(file.path(package_dir, "R", "density.R"))
+  source(file.path(package_dir, "R", "barplot.R"))
+  source(file.path(package_dir, "R", "pcoa.R"))
+  source(file.path(package_dir, "R", "heatmap.R"))
+  source(file.path(package_dir, "R", "co_network.R"))
+  
+  user_data <- load_user_data_dir(file.path(package_dir, "data", "input", "a/"))
+
+  user_data_multi <- load_user_data_dir(c(file.path(package_dir, "data", "input", "a/"),
+                                    file.path(package_dir, "data", "input", "b/"),
+                                    file.path(package_dir, "data", "input", "c/"))) %>%
+    mutate(abundance = if_else(source == "b", abundance + runif(1, 100, 10000), abundance)) %>%
+    mutate(abundance = if_else(source == "c", abundance + runif(1, 100, 10000), abundance))
+```
+
+### Bar plots
+
+Designed to compare abundance across samples. Plot can either be vertically or horizontally arranged, and a max number of samples can be specified to be plotted (i.e. x most abundance species).
+
+```{r, message=FALSE, fig.width=9, fig.height=6, dpi=75}
+make_barplot(user_data, orientation = "horizontal", max = 10)
+make_stacked_barplot(user_data_multi, orientation = "vertical", max = 10)
+```
+
+### Controls
+
+Plots community composition against the ZymoBIOMICS standard.
+
+```{r, message=FALSE, fig.width=9, fig.height=6, dpi=75}
+plot_controls(user_data)
+plot_controls(user_data_multi)
+```
+
+Calculates the difference in community composition between each sample and the standard
+
+```{r, message=FALSE}
+analyze_processing_configs(user_data, best_method = FALSE)
+```
+
+### Density
+
+Compare abundance distribution across samples. Note that if more than 10 samples are present, a legend will not be shown.
+
+```{r, message=FALSE, fig.width=9, fig.height=6, dpi=75}
+make_density_plot(user_data_multi)
+```
+
+### Heat maps
+
+Two different heat maps are available: a simpler heat map with a cleaner design, as well as a heat map showing both species and sample clustering. Note plot resolutions are compressed for this vignette so text may overlap.
+
+```{r, message=FALSE, fig.width=15, fig.height=10, dpi=46}
+make_heatmap(user_data)
+hm <- make_clustered_heatmap(user_data)
+```
+  
+### Networks
+
+Visualizes relationship between species calculated from multiple samples. Various distance methods can be used, and max distance between points can be specified to provide a cutoff for the strength of relationships between points. See `plot_net()` from the `phyloseq` library for availabvle distance methods.
+
+```{r, message=FALSE, fig.width=12, fig.height=8, dpi=57}
+physeq_object <- create_physeq_object(data = user_data)
+  
+create_network_phyloseq(physeq_object = physeq_object,
+                                     distance_method = "bray",
+                                     max_dist = 0.5)
+```
+
+### PCoA
+
+Creates a PCoA plot to visualize beta-diversity (community composition differences between samples). Note that if more than 10 samples are present, a legend will not be shown. `zero_missing` replaces any missing values with zeros e.g. if one sample has data for a species that other samples do not. Setting this option to `FALSE` may limit the effectiveness of this analysis.
+
+```{r, message=FALSE, fig.width=9, fig.height=6, dpi=75}
+do_pcoa(user_data_multi, zero_missing = TRUE)
+```
+
+### Tree map
+
+Displays a minimalist representation of species abundance, averaged (mean) across samples.
+
+```{r, message=FALSE, fig.width=9, fig.height=6, dpi=75}
+make_treemap(user_data, max = 10)
+```
+
+## Interoperatibility
+
+### Docker
+
+You may want to run this in Docker, either in its own container, or as part of a more extensive workflow. Set up takes a little longer, but generally allows for easier dependency management and interoperatibility in the future.
+
+Detailed instructions are out of scope for this document, but some basic commands for getting started are listed below (these can also be found in `inst/scripts/`).
+
+An example `Dockerfile` can be found in the parent directory of this repository.
+
+#### Building an image
+
+```{sh, eval=FALSE}
+# Stop container if running
+sudo docker container stop microbiome-analysis
+
+# Remove old container if present
+sudo docker container rm microbiome-analysis-container
+
+# Remove old image if present
+sudo docker image rm microbiome-analysis
+
+# Build image
+DOCKER_BUILDKIT=1 sudo docker build -t microbiome-analysis .
+
+# Launch container
+sudo docker run -d --name microbiome-analysis-container microbiome-analysis
+
+# Use container interactively
+docker exec -it microbiome-analysis-container /bin/bash
+```
+
+#### Running inside a container
+
+```{sh, eval=FALSE}
+# Copying data into a container
+docker cp /home/$USER/Documents/data.tsv microbiome-analysis-container:/usr/local/bin/data.tsv
+
+# Running commands in a Docker container
+docker exec microbiome-analysis-container Rscript /usr/local/bin/microbiome_analysis/pcoa.R --arguments ...
+
+# Copying from container to local environment
+docker cp microbiome-analysis-container:/usr/local/bin/output.jpeg ~/Downloads/
+
+# Running a container interactively
+docker exec -it microbiome-analysis-container /bin/bash
+```
+
+
+### Python
+
+It is technically possible to run these tools from within Python.
+
+a. Use the `reticulate` package to import the R functions into the Python environment (best)
+b. Use `subprocess.call()` to execute shell commands
+c. Use `os.system()` to execute shell commands
+
+Executing shell commands from Python to do this is generally not the most ideal solution, particularly as the `reticulate` module in Python is suitably comprehensive for this use case.

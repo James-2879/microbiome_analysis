@@ -54,7 +54,7 @@ make_treemap <- function(data, max) {
   return(treemap)
 }
 
-if (!interactive()) {
+if (!interactive() && !knitr::is_html_output()) {
   
   setwd(toString(args$utility_directory))
   

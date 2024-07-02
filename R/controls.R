@@ -138,7 +138,7 @@ analyze_processing_configs <- function(data, best_method = FALSE) {
 
 # CLI ----
 
-if (!interactive()) {
+if (!interactive() && !knitr::is_html_output()) {
   
   setwd(toString(args$utility_directory))
   

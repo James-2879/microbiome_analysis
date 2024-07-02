@@ -50,7 +50,7 @@ make_density_plot <- function(data) {
   return(plot)
 }
 
-if (!interactive()) {
+if (!interactive() && !knitr::is_html_output()) {
   
   setwd(toString(args$utility_directory))
   

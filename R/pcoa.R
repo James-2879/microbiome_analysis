@@ -117,7 +117,7 @@ do_pcoa <- function(data, zero_missing = TRUE) {
 
 # https://journals.asm.org/doi/10.1128/msystems.00166-16
 
-if (!interactive()) {
+if (!interactive() && !knitr::is_html_output()) {
   
   setwd(toString(args$utility_directory))
   
